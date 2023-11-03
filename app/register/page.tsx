@@ -12,7 +12,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {gql, useMutation} from "@apollo/client";
-import createApolloClient from "../ApolloClient";
 import {
     useQuery,
     useSuspenseQuery,
@@ -21,109 +20,59 @@ import {
     useFragment,
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
+const GET_USERS = gql`
+    query Users {
+        users {
+            users {
+                user_id
+                first_name
+                last_name
+                email
+                username
+                register_timestamp
+                last_login_timestamp
+            }
+        }
+    }`
 
 const ADD_USER = gql`
-    mutation AddUser(
-        $first_name: String!,
-        $last_name: String!,
-        $email: String!,
-        $username: String!,
-        $password: String!,
-    ) {
-        add_user(
-            first_name: $first_name,
-            last_name: $last_name,
-            email: $email,
-            username: $username,
-            password: $password,
-        ) {
-            id
-            first_name
-            last_name
-            email
-            username
-            password
+    mutation Mutation($firstName: String!, $lastName: String!, $email: String!, $username: String!, $password: String!) {
+        users {
+            add_user(first_name: $firstName, last_name: $lastName, email: $email, username: $username, password: $password) {
+                user_id
+                first_name
+                last_name
+                email
+                username
+                register_timestamp
+            }
         }
-    }
-`;
+    }`
 
-// const ADD_USER = gql`
-//     mutation AddUser(
-//         $first_name: String!,
-//         $last_name: String!,
-//         $email: String!,
-//         $username: String!,
-//         $password: String!,
-//     ) {
-//         add_user(
-//             first_name: $first_name,
-//             last_name: $last_name,
-//             email: $email,
-//             username: $username,
-//             password: $password,
-//         ) {
-//             id
-//             first_name
-//             last_name
-//             email
-//             username
-//             password
-//         }
-//     }
-// `;
 
 export default function Register() {
 
-    // const [add_user, { data, loading, error }] = useMutation(ADD_USER);
+    const [add_user, { data, loading, error }] = useMutation(ADD_USER);
 
-    const { loading, error, data } = useQuery(gql`
-        query Users {
-            users {
-                users {
-                    user_id
-                    first_name
-                    last_name
-                    email
-                    username
-                    register_timestamp
-                    last_login_timestamp
-                }
-            }
-        }`)
-    console.log(data)
+    // For some reason this cannot be in handleSubmit:
+    // Uncaught (in promise) Error: Invalid hook call. Hooks can only be called inside of the body of a function component.
+    {
+        const { loading, error, data } = useQuery(GET_USERS)
+        console.log("Get", data)
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const { loading, error, data } = useQuery(gql`
-            query Users {
-                users {
-                    users {
-                        user_id
-                        first_name
-                        last_name
-                        email
-                        username
-                        register_timestamp
-                        last_login_timestamp
-                    }
-                }
-            }`)
-        console.log(data)
-        // const data = new FormData(event.currentTarget);
-        // // add_user({variables: {
-        // //         firstName: data.get('firstName'),
-        // //         lastName: data.get('lastName'),
-        // //         email: data.get('email'),
-        // //         username: data.get('username'),
-        // //         password: data.get('password'),
-        // //     }})
-        // console.log({
-        //     firstName: data.get('firstName'),
-        //     lastName: data.get('lastName'),
-        //     email: data.get('email'),
-        //     username: data.get('username'),
-        //     password: data.get('password'),
-        // });
+
+        const data = new FormData(event.currentTarget);
+        const result = await add_user({variables: {
+                firstName: data.get('firstName'),
+                lastName: data.get('lastName'),
+                email: data.get('email'),
+                username: data.get('username'),
+                password: data.get('password'),
+            }})
+        console.log("Add", result)
     };
 
     return (
