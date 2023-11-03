@@ -44,7 +44,7 @@ export default function Login() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Logowanie
+                        Sign in
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -52,7 +52,7 @@ export default function Login() {
                             required
                             fullWidth
                             id="email"
-                            label="Adres email"
+                            label="Email Address"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -62,14 +62,14 @@ export default function Login() {
                             required
                             fullWidth
                             name="password"
-                            label="Hasło"
+                            label="Password"
                             type="password"
                             id="password"
                             autoComplete="current-password"
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
-                            label="Zapamiętaj mnie"
+                            label="Remember me"
                         />
                         <Button
                             type="submit"
@@ -82,13 +82,13 @@ export default function Login() {
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
-                                    Zapomniałeś hasła?
+                                    Forgot password?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Typography variant="body2">
-                                    Nie masz konta? <Link href="/register">Zarejestruj się</Link>
-                                </Typography>
+                                <Link href="/register" variant="body2">
+                                    Don't have an account? Sign up
+                                </Link>
                             </Grid>
                         </Grid>
                     </Box>

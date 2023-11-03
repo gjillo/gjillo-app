@@ -45,7 +45,7 @@ export default function Register() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Rejestracja
+                        Sign up
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
@@ -56,7 +56,7 @@ export default function Register() {
                                     required
                                     fullWidth
                                     id="firstName"
-                                    label="Imię"
+                                    label="First Name"
                                     autoFocus
                                 />
                             </Grid>
@@ -65,7 +65,7 @@ export default function Register() {
                                     required
                                     fullWidth
                                     id="lastName"
-                                    label="Nazwisko"
+                                    label="Last Name"
                                     name="lastName"
                                     autoComplete="family-name"
                                 />
@@ -75,7 +75,7 @@ export default function Register() {
                                     required
                                     fullWidth
                                     id="email"
-                                    label="Adres email"
+                                    label="Email Address"
                                     name="email"
                                     autoComplete="email"
                                 />
@@ -85,7 +85,7 @@ export default function Register() {
                                     required
                                     fullWidth
                                     id="username"
-                                    label="Nazwa użytkownika"
+                                    label="Username"
                                     name="username"
                                     autoComplete="username"
                                 />
@@ -95,7 +95,7 @@ export default function Register() {
                                     required
                                     fullWidth
                                     name="password"
-                                    label="Hasło"
+                                    label="Password"
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
@@ -108,13 +108,13 @@ export default function Register() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Zarejestruj
+                            Sign up
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Typography variant="body2">
-                                    Masz już konto? <Link href="/login">Zaloguj się</Link>
-                                </Typography>
+                                <Link href="/login" variant="body2">
+                                    Already have an account? Sign in
+                                </Link>
                             </Grid>
                         </Grid>
                     </Box>
