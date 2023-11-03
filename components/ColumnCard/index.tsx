@@ -24,7 +24,7 @@ function ColumnCard({ name, labels, date, assignee }: ColumnCardProps) {
         {labels && (
           <ul className={styles.columncard__labels}>
             {labels.map(label => (
-              <li><Chip className={styles.columncard__label} key={label.name} label={label.name} sx={{ backgroundColor: label.color }} size="small" /></li>
+              <li key={label.name}><Chip className={styles.columncard__label} label={label.name} sx={{ backgroundColor: label.color }} size="small" /></li>
             ))}
         </ul>
         )}
