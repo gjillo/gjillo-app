@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './styles.module.scss'
-import Task from '../Task';
+import ColumnCard from '../ColumnCard';
 
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -63,7 +63,7 @@ function Column({name}: ColumnProps) {
       <Typography className={styles.column__title} variant="h2">{name}</Typography>
       <div>
         {tasks.map(task => (
-          <Task key={task.name} {...task} />
+          <ColumnCard key={task.name} {...task} />
         ))}
       </div>
       <Button className={styles.column__addTask}><AddIcon /> Dodaj kartę</Button>
