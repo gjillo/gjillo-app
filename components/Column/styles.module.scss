@@ -1,0 +1,27 @@
+.column {
+  width: 340px;
+  padding: 10px;
+  background-color: #f3f3f3;
+  position: relative;
+
+  &__title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px auto;
+    margin-bottom: 25px;
+    width: 70%;
+  }
+
+  &__tasksCounter {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+  }
+
+  &__addTask {
+    width: 100%;
+    color: inherit;
+    text-transform: none;
+  }
+}
