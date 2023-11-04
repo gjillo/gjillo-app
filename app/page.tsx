@@ -1,10 +1,12 @@
+"use client"
+
 import React from 'react'
-import Column from '../components/Column'
+import Project from '@/components/Project';
 
 export default function Home() {
-  return (
-    <>
-      <Column name="Pomysły" />
-    </>
-  )
+    return (
+        <>
+            <Project id={1} />
+        </>
+    )
 }

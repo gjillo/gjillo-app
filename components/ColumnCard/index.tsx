@@ -9,7 +9,7 @@ interface Label {
   color: string
 }
 
-interface ColumnCardProps {
+export interface ColumnCardProps {
   name: string
   labels?: Label[]
   date?: string

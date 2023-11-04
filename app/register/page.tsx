@@ -20,20 +20,6 @@ import {
     useFragment,
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
-const GET_USERS = gql`
-    query Users {
-        users {
-            users {
-                user_id
-                first_name
-                last_name
-                email
-                username
-                register_timestamp
-                last_login_timestamp
-            }
-        }
-    }`
 
 const ADD_USER = gql`
     mutation Mutation($firstName: String!, $lastName: String!, $email: String!, $username: String!, $password: String!) {
@@ -53,13 +39,6 @@ const ADD_USER = gql`
 export default function Register() {
 
     const [add_user, { data, loading, error }] = useMutation(ADD_USER);
-
-    // For some reason this cannot be in handleSubmit:
-    // Uncaught (in promise) Error: Invalid hook call. Hooks can only be called inside of the body of a function component.
-    {
-        const { loading, error, data } = useQuery(GET_USERS)
-        console.log("Get", data)
-    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
