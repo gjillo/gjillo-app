@@ -29,7 +29,7 @@ export const authOptions: AuthOptions = {
     maxAge: 60 * 60 * 24 * 7, // 1 week
     updateAge: 60 * 60 // 1 day
   },
-  adapter: PGAdapter(pool, process.env.DB_SCHEMA ?? ''),
+  adapter: PGAdapter(pool),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID,

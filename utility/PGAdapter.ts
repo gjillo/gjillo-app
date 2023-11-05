@@ -14,14 +14,14 @@ export function mapExpiresAt(account: any): any {
   }
 }
 
-export const PGAdapter = (client: Pool, schema: string): Adapter => {
+export const PGAdapter = (client: Pool): Adapter => {
   return {
     async createVerificationToken(
       verificationToken: VerificationToken
     ): Promise<VerificationToken> {
       const { identifier, expires, token } = verificationToken
       const sql = `
-        INSERT INTO ${schema}.verification_token ( identifier, expires, token ) 
+        INSERT INTO auth.verification_token ( identifier, expires, token ) 
         VALUES ($1, $2, $3)
         `
       await client.query(sql, [identifier, expires, token])
@@ -34,7 +34,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       identifier: string
       token: string
     }): Promise<VerificationToken> {
-      const sql = `delete from ${schema}.verification_token
+      const sql = `delete from auth.verification_token
       where identifier = $1 and token = $2
       RETURNING identifier, expires, token `
       const result = await client.query(sql, [identifier, token])
@@ -44,7 +44,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
     async createUser(user: Omit<AdapterUser, "id">) {
       const { name, email, emailVerified, image } = user
       const sql = `
-        INSERT INTO ${schema}.users (name, email, "emailVerified", image) 
+        INSERT INTO auth.users (name, email, "emailVerified", image) 
         VALUES ($1, $2, $3, $4) 
         RETURNING id, name, email, "emailVerified", image`
       const result = await client.query(sql, [
@@ -56,7 +56,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       return result.rows[0]
     },
     async getUser(id) {
-      const sql = `select * from ${schema}.users where id = $1`
+      const sql = `select * from auth.users where id = $1`
       try {
         const result = await client.query(sql, [id])
         return result.rowCount === 0 ? null : result.rows[0]
@@ -65,7 +65,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       }
     },
     async getUserByEmail(email) {
-      const sql = `select * from ${schema}.users where email = $1`
+      const sql = `select * from auth.users where email = $1`
       const result = await client.query(sql, [email])
       return result.rowCount !== 0 ? result.rows[0] : null
     },
@@ -74,7 +74,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
                              provider,
                            }): Promise<AdapterUser | null> {
       const sql = `
-          select u.* from ${schema}.users u join ${schema}.accounts a on u.id = a."userId"
+          select u.* from auth.users u join auth.accounts a on u.id = a."userId"
           where 
           a.provider = $1 
           and 
@@ -84,7 +84,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       return result.rowCount !== 0 ? result.rows[0] : null
     },
     async updateUser(user: Partial<AdapterUser>): Promise<AdapterUser> {
-      const fetchSql = `select * from ${schema}.users where id = $1`
+      const fetchSql = `select * from auth.users where id = $1`
       const query1 = await client.query(fetchSql, [user.id])
       const oldUser = query1.rows[0]
 
@@ -95,7 +95,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
 
       const { id, name, email, emailVerified, image } = newUser
       const updateSql = `
-        UPDATE ${schema}.users set
+        UPDATE auth.users set
         name = $2, email = $3, "emailVerified" = $4, image = $5
         where id = $1
         RETURNING name, id, email, "emailVerified", image
@@ -111,7 +111,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
     },
     async linkAccount(account) {
       const sql = `
-      insert into ${schema}.accounts 
+      insert into auth.accounts 
       (
         "userId", 
         provider, 
@@ -162,7 +162,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       if (userId === undefined) {
         throw Error(`userId is undef in createSession`)
       }
-      const sql = `insert into ${schema}.sessions ("userId", expires, "sessionToken")
+      const sql = `insert into auth.sessions ("userId", expires, "sessionToken")
       values ($1, $2, $3)
       RETURNING id, "sessionToken", "userId", expires`
 
@@ -178,7 +178,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
         return null
       }
       const result1 = await client.query(
-        `select * from ${schema}.sessions where "sessionToken" = $1`,
+        `select * from auth.sessions where "sessionToken" = $1`,
         [sessionToken]
       )
       if (result1.rowCount === 0) {
@@ -186,7 +186,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       }
       let session: AdapterSession = result1.rows[0]
 
-      const result2 = await client.query(`select * from ${schema}.users where id = $1`, [
+      const result2 = await client.query(`select * from auth.users where id = $1`, [
         session.userId,
       ])
       if (result2.rowCount === 0) {
@@ -203,7 +203,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
     ): Promise<AdapterSession | null | undefined> {
       const { sessionToken } = session
       const result1 = await client.query(
-        `select * from ${schema}.sessions where "sessionToken" = $1`,
+        `select * from auth.sessions where "sessionToken" = $1`,
         [sessionToken]
       )
       if (result1.rowCount === 0) {
@@ -216,7 +216,7 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
         ...session,
       }
       const sql = `
-        UPDATE ${schema}.sessions set
+        UPDATE auth.sessions set
         expires = $2
         where "sessionToken" = $1
         `
@@ -227,18 +227,18 @@ export const PGAdapter = (client: Pool, schema: string): Adapter => {
       return result.rows[0]
     },
     async deleteSession(sessionToken) {
-      const sql = `delete from ${schema}.sessions where "sessionToken" = $1`
+      const sql = `delete from auth.sessions where "sessionToken" = $1`
       await client.query(sql, [sessionToken])
     },
     async unlinkAccount(partialAccount) {
       const { provider, providerAccountId } = partialAccount
-      const sql = `delete from ${schema}.accounts where "providerAccountId" = $1 and provider = $2`
+      const sql = `delete from auth.accounts where "providerAccountId" = $1 and provider = $2`
       await client.query(sql, [providerAccountId, provider])
     },
     async deleteUser(userId: string) {
-      await client.query(`delete from ${schema}.users where id = $1`, [userId])
-      await client.query(`delete from ${schema}.sessions where "userId" = $1`, [userId])
-      await client.query(`delete from ${schema}.accounts where "userId" = $1`, [userId])
+      await client.query(`delete from auth.users where id = $1`, [userId])
+      await client.query(`delete from auth.sessions where "userId" = $1`, [userId])
+      await client.query(`delete from auth.accounts where "userId" = $1`, [userId])
     },
   }
 }
