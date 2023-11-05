@@ -55,6 +55,12 @@ export const authOptions: AuthOptions = {
       else if (new URL(url).origin === baseUrl) return url
       return baseUrl
     }
+  },
+  pages: {
+    signIn: '/signin',
+    signOut: '/api/auth/signout',
+    verifyRequest: '/api/auth/verify-request',
+    error: '/api/auth/error'
   }
 }
 
