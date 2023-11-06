@@ -1,11 +1,10 @@
+"use client"
+
 import React from 'react'
 import styles from './styles.module.scss'
-import ColumnCard from '../ColumnCard';
 
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import {Button, Chip} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import {gql, useMutation} from "@apollo/client";
 import {
     useQuery,
@@ -15,6 +14,8 @@ import {
     useFragment,
 } from "@apollo/experimental-nextjs-app-support/ssr";
 import Column from "@/components/Column";
+import Grid from "@mui/material/Grid";
+import {Alert, LinearProgress} from "@mui/material";
 
 const GET_PROJECT = gql`
     query Project($projectId: Int!) {
@@ -47,23 +48,34 @@ interface ProjectProps {
 
 function Project({id}: ProjectProps) {
     const {loading, error, data} = useQuery(GET_PROJECT, {
-        variables: {projectId: 1},
+        variables: {projectId: id},
     });
-    // console.log("Get", data)
-    if (data) {
-        console.log(data.project)
-    }
 
+    if (loading) return <LinearProgress />
+    if (error) return <Alert severity="error">{`${error}`}</Alert>
+
+    console.log(data)
 
     return (
-        <>
-            <Typography>Project {id}</Typography>
-            <div className={styles.columns}>
-                {data && data.project.columns.map(col =>
-                    <Column {...col} key={col.id}></Column>
+        <Paper elevation={1} sx={{ m: 1 }}>
+            <Typography
+                variant="h3"
+                sx={{ m: 2 }}
+            >{data.project.name}</Typography>
+            <Grid
+                container
+                // spacing={2} breaks scrolling, children margin required
+                direction="row"
+                overflow="auto"
+                wrap={"nowrap"}
+            >
+                {data.project.columns.map((col: any) =>
+                    <Grid item key={col.id}>
+                        <Column {...col}></Column>
+                    </Grid>
                 )}
-            </div>
-        </>
+            </Grid>
+        </Paper>
     )
 }
 

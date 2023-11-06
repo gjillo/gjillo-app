@@ -10,6 +10,7 @@ interface Label {
 }
 
 export interface ColumnCardProps {
+  id: number
   name: string
   labels?: Label[]
   date?: string

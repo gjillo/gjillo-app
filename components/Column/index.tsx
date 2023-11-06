@@ -52,6 +52,7 @@ import AddIcon from '@mui/icons-material/Add';
 // ]
 
 interface ColumnProps {
+  id: number,
   name: string,
   type: string,
   description: string,
@@ -60,7 +61,7 @@ interface ColumnProps {
 
 function Column({name, type, description, cards}: ColumnProps) {
   return (
-    <Paper className={styles.column} elevation={3}>
+    <Paper className={styles.column} elevation={3} sx={{ m: 2 }}>
       <Chip className={styles.column__tasksCounter} label={cards.length} size="small" />
       <Typography className={styles.column__title} variant="h2">{name}</Typography>
       <div>
