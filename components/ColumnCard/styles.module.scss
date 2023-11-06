@@ -6,7 +6,7 @@
   text-transform: none;
   display: block;
 
-  &__content {
+  .columncard__content {
     padding: 10px;
     width: 100%;
     display: flex;
@@ -14,24 +14,24 @@
     align-items: flex-start;
   }
 
-  &__name {
+  .columncard__name {
     margin: 10px 5px;
     text-align: left;
     width: 80%;
   }
 
-  &__labels {
+  .columncard__labels {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     margin: 5px 0;
   }
 
-  &__label {
+  .columncard__label {
     margin: 5px;
   }
 
-  &__assignee {
+  .columncard__assignee {
     position: absolute;
     top: 15px;
     right: 15px;
@@ -39,7 +39,7 @@
     height: 30px;
   }
 
-  &__date {
+  .columncard__date {
     margin: 5px;
   }
 }
