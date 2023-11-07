@@ -15,7 +15,6 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 import Column, { ColumnProps } from "@/components/Column";
 import Grid from "@mui/material/Grid";
-import {Alert, LinearProgress} from "@mui/material";
 
 
 interface ProjectProps {
@@ -25,14 +24,8 @@ interface ProjectProps {
     columns: ColumnProps[]
 }
 
-function Project(props: ProjectProps) {
-    // const {loading, error, data} = useQuery(GET_PROJECT, {
-    //     variables: {projectId: id},
-    // });
-    //
-    // if (loading) return <LinearProgress />
-    // if (error) return <Alert severity="error">{`${error}`}</Alert>
 
+function Project(props: ProjectProps) {
     console.log(props)
 
     return (
