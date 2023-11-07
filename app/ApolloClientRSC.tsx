@@ -18,7 +18,7 @@ export const { getClient } = registerApolloClient(() => {
         // Remember that this is the interface the SSR server will use to connect to the
         // API server, so we need to ensure it isn't firewalled, etc
         link: new HttpLink({
-            uri: 'http://localhost:4000/graphql',
+            uri: process.env.NEXT_PUBLIC_GQL_SERVER,
         }),
         cache: new InMemoryCache(),
         defaultOptions: defaultOptions, // Disable cache
