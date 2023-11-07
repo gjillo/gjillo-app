@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import ThemeRegistry from "@/app/ThemeRegistry";
 import React from "react";
-import { ApolloWrapper } from './ApolloWrapper';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,9 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ApolloWrapper>
-          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
-        </ApolloWrapper>
+        <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
       </body>
     </html>
   )

@@ -13,55 +13,34 @@ import {
     useReadQuery,
     useFragment,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import Column from "@/components/Column";
+import Column, { ColumnProps } from "@/components/Column";
 import Grid from "@mui/material/Grid";
 import {Alert, LinearProgress} from "@mui/material";
 
-const GET_PROJECT = gql`
-    query Project($projectId: Int!) {
-        project(projectId: $projectId) {
-            id
-            name
-            created
-            columns {
-                id
-                name
-                order
-                type
-                description
-                cards {
-                    id
-                    name
-                    description
-                    story_points
-                    created
-                    order
-                }
-            }
-        }
-    }`
-
 
 interface ProjectProps {
-    id: number
+    id: number,
+    name: string,
+    created: string,
+    columns: ColumnProps[]
 }
 
-function Project({id}: ProjectProps) {
-    const {loading, error, data} = useQuery(GET_PROJECT, {
-        variables: {projectId: id},
-    });
+function Project(props: ProjectProps) {
+    // const {loading, error, data} = useQuery(GET_PROJECT, {
+    //     variables: {projectId: id},
+    // });
+    //
+    // if (loading) return <LinearProgress />
+    // if (error) return <Alert severity="error">{`${error}`}</Alert>
 
-    if (loading) return <LinearProgress />
-    if (error) return <Alert severity="error">{`${error}`}</Alert>
-
-    console.log(data)
+    console.log(props)
 
     return (
         <Paper elevation={1} sx={{ m: 1 }}>
             <Typography
                 variant="h3"
                 sx={{ m: 2 }}
-            >{data.project.name}</Typography>
+            >{props.name}</Typography>
             <Grid
                 container
                 // spacing={2} breaks scrolling, children margin required
@@ -69,7 +48,7 @@ function Project({id}: ProjectProps) {
                 overflow="auto"
                 wrap={"nowrap"}
             >
-                {data.project.columns.map((col: any) =>
+                {props.columns.map((col: any) =>
                     <Grid item key={col.id}>
                         <Column {...col}></Column>
                     </Grid>

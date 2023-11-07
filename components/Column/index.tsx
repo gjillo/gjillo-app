@@ -51,7 +51,7 @@ import AddIcon from '@mui/icons-material/Add';
 //   }
 // ]
 
-interface ColumnProps {
+export interface ColumnProps {
   id: number,
   name: string,
   type: string,
