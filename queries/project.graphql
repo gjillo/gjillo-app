@@ -1,0 +1,22 @@
+query Project($projectId: Int!) {
+    project(projectId: $projectId) {
+        id
+        name
+        created
+        columns {
+            id
+            name
+            order
+            type
+            description
+            cards {
+                id
+                name
+                description
+                story_points
+                created
+                order
+            }
+        }
+    }
+}
