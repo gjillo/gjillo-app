@@ -52,7 +52,7 @@ import AddIcon from '@mui/icons-material/Add';
 // ]
 
 export interface ColumnProps {
-  uuid: number,
+  uuid: string,
   name: string,
   type: string,
   description: string,

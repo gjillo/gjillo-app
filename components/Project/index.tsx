@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 
 
 interface ProjectProps {
-    uuid: number,
+    uuid: string,
     name: string,
     created: string,
     columns: ColumnProps[]
