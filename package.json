@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.6",
+    "@apollo/experimental-nextjs-app-support": "^0.5.1",
     "@auth/pg-adapter": "^0.2.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -20,6 +21,7 @@
     "@mui/x-date-pickers": "^6.17.0",
     "framer-motion": "^10.16.4",
     "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.14.2",
     "moment": "^2.29.4",
     "next": "14.0.1",

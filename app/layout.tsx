@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import ThemeRegistry from "@/app/ThemeRegistry";
+import ThemeRegistry from "@app/ThemeRegistry";
+import React from "react";
+import { ApolloWrapper } from "@app/ApolloWrapper"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+        <ApolloWrapper>
+          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+        </ApolloWrapper>
       </body>
     </html>
   )

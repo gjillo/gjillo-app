@@ -9,7 +9,8 @@ interface Label {
   color: string
 }
 
-interface ColumnCardProps {
+export interface ColumnCardProps {
+  id: number
   name: string
   labels?: Label[]
   date?: string
