@@ -1,4 +1,1 @@
-declare module "*.graphql" {
-    const value: gql;
-    export default value;
-}
+declare module '*.graphql'
