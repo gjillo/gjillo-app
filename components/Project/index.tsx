@@ -13,7 +13,7 @@ import {
     useReadQuery,
     useFragment,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import Column, { ColumnProps } from "@/components/Column";
+import Column, { ColumnProps } from "@components/Column";
 import Grid from "@mui/material/Grid";
 
 

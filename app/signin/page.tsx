@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import {Alert, AlertTitle, Typography} from "@mui/material";
 import {getProviders} from "next-auth/react";
-import ProviderButton from "@/components/ProviderButton";
-import {getSession} from "@/utility/getSession";
+import ProviderButton from "@components/ProviderButton";
+import {getSession} from "@utility/getSession";
 import {redirect} from "next/navigation";
 import {SignInPageErrorParam} from "@node_modules/@auth/core/types";
 
