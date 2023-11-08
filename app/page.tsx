@@ -7,9 +7,9 @@ export default function Home() {
             <Typography variant="h1">Home</Typography>
             <List>
                 <ListItem>
-                    <ListItemButton href="/project/1">
+                    <ListItemButton href="/project/9634bfda-8673-45ea-8abd-52027cc343ea">
                         <ListItemText>
-                            Project 1
+                            Sample project
                         </ListItemText>
                     </ListItemButton>
                 </ListItem>

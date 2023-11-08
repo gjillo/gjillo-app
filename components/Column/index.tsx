@@ -52,21 +52,21 @@ import AddIcon from '@mui/icons-material/Add';
 // ]
 
 export interface ColumnProps {
-  id: number,
+  uuid: number,
   name: string,
   type: string,
   description: string,
   cards: ColumnCardProps[],
 }
 
-function Column({name, type, description, cards}: ColumnProps) {
+function Column({name, cards}: ColumnProps) {
   return (
     <Paper className={styles.column} elevation={3} sx={{ m: 2 }}>
       <Chip className={styles.column__tasksCounter} label={cards.length} size="small" />
       <Typography className={styles.column__title} variant="h2">{name}</Typography>
       <div>
         {cards.map(card => (
-          <ColumnCard key={card.id} {...card} />
+          <ColumnCard key={card.uuid} {...card} />
         ))}
       </div>
       <Button className={styles.column__addTask}><AddIcon /> Dodaj kartę</Button>
