@@ -1,7 +1,7 @@
 import React from 'react'
-import Project from '@/components/Project';
+import Project from '@components/Project';
 import { getClient } from '@app/ApolloClientRSC'
-import project from "@/queries/project.graphql";
+import project from '@queries/project.graphql';
 
 
 export default async function ProjectPage({ params }: { params: { id: number }}) {

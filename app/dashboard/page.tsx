@@ -1,4 +1,4 @@
-import {getSession} from "@/utility/getSession";
+import {getSession} from "@utility/getSession";
 import {redirect} from "next/navigation";
 import SignOutButton from "@app/dashboard/SignOutButton";
 

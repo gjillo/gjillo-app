@@ -13,7 +13,7 @@ for (const key in process.env) {
     console.warn(`Seems you forgot to set a value for env var: ${key}`);
   }
 }
-``
+
 nextConfig.webpack = (config, options) => {
   config.module.rules.push({
     test: /\.(graphql|gql)/,
