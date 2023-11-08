@@ -31,7 +31,7 @@ function makeClient() {
                 ? ApolloLink.from([
                     // in a SSR environment, if you use multipart features like
                     // @defer, you need to decide how to handle these.
-                    // This strips all interfaces with a `@defer` directive from your queries.
+                    // This strips all interfaces with a `@defer` directive from your graphql.
                     new SSRMultipartLink({
                         stripDefer: true,
                     }),

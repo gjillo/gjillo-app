@@ -1,16 +1,16 @@
-query Project($projectId: Int!) {
-    project(projectId: $projectId) {
-        id
+query Project($projectUuid: UUID!) {
+    project(projectUuid: $projectUuid) {
+        uuid
         name
         created
         columns {
-            id
+            uuid
             name
             order
             type
             description
             cards {
-                id
+                uuid
                 name
                 description
                 story_points
