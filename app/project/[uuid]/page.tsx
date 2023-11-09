@@ -1,20 +1,26 @@
 import React from 'react'
 import Project from '@components/Project';
 import { getClient } from '@app/ApolloClientRSC'
-import project from '@graphql/project.query.graphql';
+import project from '@queries/project.graphql';
+
+import {ProjectDocument, ProjectQuery} from "@generated/graphql-operations";
 
 
 export default async function ProjectPage({ params }: { params: { uuid: string }}) {
     const { data } = await getClient().query({
-        query: project,
+        query: ProjectDocument,
         variables: {
             projectUuid: params.uuid
         },
     });
 
+    console.log(data)
+
     return (
         <>
-            <Project {...data.project} />
+            {data?.project &&
+                <Project {...data.project} />
+            }
         </>
     )
 }

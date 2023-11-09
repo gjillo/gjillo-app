@@ -4,19 +4,27 @@ import React from 'react'
 
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Column, { ColumnProps } from "@components/Column";
+import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
+import {Alert, LinearProgress} from "@mui/material";
+
+import {useQuery} from "@apollo/client";
+import {ProjectDocument} from "@generated/graphql-operations";
+import {Project} from "@generated/graphql-operations";
 
 
-interface ProjectProps {
-    uuid: string,
-    name: string,
-    created: string,
-    columns: ColumnProps[]
-}
+function Project(props: Project) {
+    console.log(props)
+    const { loading, data, error } = useQuery(ProjectDocument,{
+        variables: {
+            projectUuid: props.uuid
+        },
+    });
+    if (loading) return <LinearProgress />
+    if (error) return <Alert severity="error">{`${error}`}</Alert>
 
+    console.log(data)
 
-function Project(props: ProjectProps) {
     return (
         <Paper elevation={1} sx={{ m: 1 }}>
             <Typography
