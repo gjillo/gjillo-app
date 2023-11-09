@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { Button, Chip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {Column} from "@generated/graphql-operations";
+import {Column} from "@graphql/types";
 import ColumnCard from "@components/ColumnCard";
 
 

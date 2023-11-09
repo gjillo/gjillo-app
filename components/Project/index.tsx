@@ -1,30 +1,14 @@
 "use client"
 
 import React from 'react'
-
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
-import {Alert, LinearProgress} from "@mui/material";
-
-import {useQuery} from "@apollo/client";
-import {ProjectDocument} from "@generated/graphql-operations";
-import {Project} from "@generated/graphql-operations";
+import {Project} from "@graphql/types";
 
 
 function Project(props: Project) {
-    console.log(props)
-    const { loading, data, error } = useQuery(ProjectDocument,{
-        variables: {
-            projectUuid: props.uuid
-        },
-    });
-    if (loading) return <LinearProgress />
-    if (error) return <Alert severity="error">{`${error}`}</Alert>
-
-    console.log(data)
-
     return (
         <Paper elevation={1} sx={{ m: 1 }}>
             <Typography

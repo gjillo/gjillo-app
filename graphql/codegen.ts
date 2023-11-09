@@ -1,11 +1,11 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-    schema: 'http://localhost:4000/graphql',
+    schema: process.env.NEXT_PUBLIC_GQL_SERVER,
     documents: ['graphql/**/*.graphql'],
     ignoreNoDocuments: true, // for better experience with the watcher
     generates: {
-        'generated/graphql-operations.ts': {
+        'graphql/types.ts': {
             plugins: [
                 "typescript",
                 "typescript-operations",

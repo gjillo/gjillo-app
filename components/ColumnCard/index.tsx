@@ -3,7 +3,7 @@ import styles from './styles.module.scss'
 
 import { Avatar, Button, Chip, Paper, Tooltip, Typography } from '@mui/material'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import {Card} from "@generated/graphql-operations";
+import {Card} from "@graphql/types";
 
 interface Label {
   name: string

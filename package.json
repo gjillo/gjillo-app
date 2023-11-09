@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gql:generate": "graphql-codegen",
-    "gql:watch": "graphql-codegen --watch"
+    "gql:generate": "graphql-codegen --config graphql/codegen.ts",
+    "gql:watch": "graphql-codegen --config graphql/codegen.ts --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.8.6",
@@ -17,7 +17,6 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
-    "@graphql-codegen/client-preset": "^4.1.0",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.16",
     "@mui/x-charts": "^6.0.0-alpha.17",
@@ -36,12 +35,9 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/introspection": "^4.0.0",
     "@graphql-codegen/typed-document-node": "^5.0.1",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.0.1",
-    "@graphql-codegen/typescript-react-apollo": "^4.1.0",
-    "@graphql-typed-document-node/core": "^3.2.0",
     "@parcel/watcher": "^2.3.0",
     "@types/node": "^20",
     "@types/pg": "^8.10.7",
