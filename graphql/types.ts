@@ -13,8 +13,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  Timestamp: { input: any; output: any; }
-  UUID: { input: any; output: any; }
+  Timestamp: { input: number; output: number; }
+  UUID: { input: string; output: string; }
 };
 
 export type Card = {
@@ -102,7 +102,7 @@ export type ProjectQueryVariables = Exact<{
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', uuid: any, name: string, created: any, columns: Array<{ __typename?: 'Column', uuid: any, name?: string | null, order: number, type?: ColumnType | null, description: string, cards: Array<{ __typename?: 'Card', uuid: any, name?: string | null, description?: string | null, story_points?: number | null, created: any, order: number }> }> } | null };
+export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', uuid: string, name: string, created: number, columns: Array<{ __typename?: 'Column', uuid: string, name?: string | null, order: number, type?: ColumnType | null, description: string, cards: Array<{ __typename?: 'Card', uuid: string, name?: string | null, description?: string | null, story_points?: number | null, created: number, order: number }> }> } | null };
 
 
 export const ProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Project"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectUuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectUuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectUuid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"created"}},{"kind":"Field","name":{"kind":"Name","value":"columns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"order"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"cards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"story_points"}},{"kind":"Field","name":{"kind":"Name","value":"created"}},{"kind":"Field","name":{"kind":"Name","value":"order"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProjectQuery, ProjectQueryVariables>;

@@ -29,7 +29,7 @@ function ColumnCard(props: Card) {
         {/*)}*/}
 
         {props.created && (
-          <Chip className={styles.columncard__date} label={props.created} icon={<CalendarMonthIcon />} />
+          <Chip className={styles.columncard__date} label={new Date(props.created).toLocaleDateString()} icon={<CalendarMonthIcon />} />
         )}
       </Paper>
     </Button>

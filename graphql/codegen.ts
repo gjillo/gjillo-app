@@ -9,6 +9,18 @@ const config: CodegenConfig = {
     ignoreNoDocuments: true, // for better experience with the watcher
     generates: {
         'graphql/types.ts': {
+            config: {
+                scalars: {
+                    Timestamp: {
+                        input: 'number',
+                        output: 'number'
+                    },
+                    UUID: {
+                        input: 'string',
+                        output: 'string'
+                    }
+                }
+            },
             plugins: [
                 "typescript",
                 "typescript-operations",
