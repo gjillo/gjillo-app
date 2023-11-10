@@ -1,12 +1,12 @@
 import React from 'react'
 import Project from '@components/Project';
 import { getClient } from '@app/ApolloClientRSC'
-import project from '@graphql/project.query.graphql';
+import {ProjectDocument} from "@graphql/types";
 
 
 export default async function ProjectPage({ params }: { params: { uuid: string }}) {
     const { data } = await getClient().query({
-        query: project,
+        query: ProjectDocument,
         variables: {
             projectUuid: params.uuid
         },
@@ -14,7 +14,9 @@ export default async function ProjectPage({ params }: { params: { uuid: string }
 
     return (
         <>
-            <Project {...data.project} />
+            {data.project &&
+                <Project {...data.project} />
+            }
         </>
     )
 }

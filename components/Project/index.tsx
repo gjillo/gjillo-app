@@ -1,22 +1,14 @@
 "use client"
 
 import React from 'react'
-
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Column, { ColumnProps } from "@components/Column";
+import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
+import {Project} from "@graphql/types";
 
 
-interface ProjectProps {
-    uuid: string,
-    name: string,
-    created: string,
-    columns: ColumnProps[]
-}
-
-
-function Project(props: ProjectProps) {
+function Project(props: Project) {
     return (
         <Paper elevation={1} sx={{ m: 1 }}>
             <Typography
