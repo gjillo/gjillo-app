@@ -14,7 +14,9 @@ export default async function ProjectPage({ params }: { params: { uuid: string }
 
     return (
         <>
-            <Project {...data.project!} />
+            {data.project &&
+                <Project {...data.project} />
+            }
         </>
     )
 }
