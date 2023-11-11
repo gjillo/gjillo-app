@@ -14,8 +14,6 @@ function ColumnMenu({className, columnType}: {className: string, columnType: Col
         setAnchorEl(null);
     };
 
-    console.log(columnType)
-
     return (
         <div className={className}>
             <Button
