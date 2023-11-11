@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
 import {Project} from "@graphql/types";
+import AddColumn from "@components/AddColumnButton";
 
 
 function Project(props: Project) {
@@ -27,6 +28,9 @@ function Project(props: Project) {
                         <Column {...col}></Column>
                     </Grid>
                 )}
+                <Grid item>
+                    <AddColumn />
+                </Grid>
             </Grid>
         </Paper>
     )
