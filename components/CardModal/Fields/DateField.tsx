@@ -4,21 +4,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker as Picker } from '@mui/x-date-pickers/DatePicker'
 
-interface DatePickerProps {
+interface Props {
   label: string
+  onChange: React.ComponentProps<typeof Picker>['onChange']
 }
 
-function DatePicker({ label }: DatePickerProps) {
+function DateField({ label, onChange }: Props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Picker
-        label={label}
-        sx={{
-          width: '100%',
-        }}
-      />
+      <Picker label={label} onChange={onChange} />
     </LocalizationProvider>
   )
 }
 
-export default DatePicker
+export default DateField

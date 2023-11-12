@@ -2,8 +2,13 @@ import { Modal, Paper, Typography, Box, Chip, Stack } from '@mui/material'
 
 import React from 'react'
 
-import Field from './Field'
-import DatePicker from './DatePicker'
+import SingleSelectField from './Fields/SingleSelectField'
+import DateField from './Fields/DateField'
+import Description from './Description'
+import MultiselectField from './Fields/MultiselectField'
+import TextField from './Fields/TextField'
+import NumberField from './Fields/NumberField'
+import CheckboxField from './Fields/CheckboxField'
 
 function CardModal() {
   return (
@@ -33,42 +38,78 @@ function CardModal() {
           <Typography variant="h4">Card Modal</Typography>
           <Stack direction="row" spacing={2} alignItems="center">
             <Chip label="test" />
-            <Typography variant="body2">Utworzył: Jan Kowalski</Typography>
-          </Stack>
-          <Box
-            sx={{
-              bgcolor: 'grey.200',
-              padding: 2,
-              mt: 4,
-            }}
-          >
-            <Typography variant="h6">Opis</Typography>
             <Typography variant="body2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-              nulla tenetur eaque veritatis excepturi beatae quos laudantium,
-              optio necessitatibus maiores!
+              <b>Utworzył:</b> Jan Kowalski
             </Typography>
-          </Box>
+          </Stack>
+          <Description
+            text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia nulla
+        tenetur eaque veritatis excepturi beatae quos laudantium, optio
+        necessitatibus maiores!"
+          />
         </Box>
         <Box
           sx={{
             width: '50%',
             padding: 1,
+
+            '& > .MuiTextField-root, & > .MuiAutocomplete-root': {
+              width: '100%',
+              mb: 3,
+            },
+
+            '& > .MuiFormControlLabel-root': {
+              mb: 3,
+            },
+
+            '& > .MuiTextField-root:last-child, & > .MuiAutocomplete-root:last-child, & > .MuiFormControlLabel-root:last-child':
+              {
+                mb: 0,
+              },
           }}
         >
-          <Field
+          <SingleSelectField
             options={['Jan Kowalski', 'Adam Jakistam', 'Bożena Costam']}
             loading={true}
             label="Osoby"
+            onChange={(_, value) => console.log(value)}
           />
 
-          <Field
+          <SingleSelectField
             label="Kamień milowy"
             options={['Kamień milowy 1', 'Kamień milowy 2']}
             loading={true}
+            onChange={(_, value) => console.log(value)}
           />
 
-          <DatePicker label="Data zakończenia" />
+          <DateField
+            label="Data zakończenia"
+            onChange={value => console.log(value)}
+          />
+
+          <MultiselectField
+            label="Etykiety"
+            options={[
+              { value: 'Etykieta 1', color: 'red' },
+              { value: 'Etykieta 2', color: 'blue' },
+              { value: 'Etykieta 3', color: 'green' },
+            ]}
+            loading={true}
+            onChange={(_, value) => console.log(value)}
+          />
+
+          <TextField
+            label="Link do zadania"
+            onChange={e => console.log(e.target.value)}
+          />
+          <NumberField
+            label="Numer zadania"
+            onChange={e => console.log(e.target.value)}
+          />
+          <CheckboxField
+            label="Czy zakończono?"
+            onChange={(_, checked) => console.log(checked)}
+          />
         </Box>
       </Paper>
     </Modal>
