@@ -9,8 +9,14 @@ import MultiselectField from './Fields/MultiselectField'
 import TextField from './Fields/TextField'
 import NumberField from './Fields/NumberField'
 import CheckboxField from './Fields/CheckboxField'
+import EditableText from './EditableText'
 
 function CardModal() {
+  const [cardName, setCardName] = React.useState('Card name')
+  const [description, setDescription] = React.useState(
+    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia nulla tenetur eaque veritatis excepturi beatae quos laudantium, optio necessitatibus maiores!'
+  )
+
   return (
     <Modal
       open={true}
@@ -35,18 +41,21 @@ function CardModal() {
             padding: 1,
           }}
         >
-          <Typography variant="h4">Card Modal</Typography>
+          <EditableText
+            value={cardName}
+            onValueChange={setCardName}
+            dialogTitle="Change card name"
+          >
+            <Typography variant="h4">{cardName}</Typography>
+          </EditableText>
           <Stack direction="row" spacing={2} alignItems="center">
             <Chip label="test" />
             <Typography variant="body2">
               <b>Utworzył:</b> Jan Kowalski
             </Typography>
           </Stack>
-          <Description
-            text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia nulla
-        tenetur eaque veritatis excepturi beatae quos laudantium, optio
-        necessitatibus maiores!"
-          />
+
+          <Description text={description} setText={setDescription} />
         </Box>
         <Box
           sx={{

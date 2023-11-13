@@ -1,11 +1,13 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
+import EditableText from './EditableText'
 
 interface DescriptionProps {
   text: string
+  setText: (text: string) => void
 }
 
-function Description({ text }: DescriptionProps) {
+function Description({ text, setText }: DescriptionProps) {
   return (
     <Box
       sx={{
@@ -14,8 +16,15 @@ function Description({ text }: DescriptionProps) {
         mt: 4,
       }}
     >
-      <Typography variant="h6">Opis</Typography>
-      <Typography variant="body2">{text}</Typography>
+      <Typography variant="h6">Description</Typography>
+      <EditableText
+        value={text}
+        onValueChange={setText}
+        multiline
+        dialogTitle="Change card description"
+      >
+        <Typography variant="body2">{text}</Typography>
+      </EditableText>
     </Box>
   )
 }
