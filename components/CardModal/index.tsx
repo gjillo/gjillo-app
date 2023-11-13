@@ -1,4 +1,12 @@
-import { Modal, Paper, Typography, Box, Chip, Stack } from '@mui/material'
+import {
+  Modal,
+  Paper,
+  Typography,
+  Box,
+  Chip,
+  Stack,
+  TextField,
+} from '@mui/material'
 
 import React from 'react'
 
@@ -6,7 +14,6 @@ import SingleSelectField from './Fields/SingleSelectField'
 import DateField from './Fields/DateField'
 import Description from './Description'
 import MultiselectField from './Fields/MultiselectField'
-import TextField from './Fields/TextField'
 import NumberField from './Fields/NumberField'
 import CheckboxField from './Fields/CheckboxField'
 import EditableText from './EditableText'
