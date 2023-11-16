@@ -55,12 +55,9 @@ function CardModal() {
           >
             <Typography variant="h4">{cardName}</Typography>
           </EditableText>
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Chip label="test" />
-            <Typography variant="body2">
-              <b>Utworzył:</b> Jan Kowalski
-            </Typography>
-          </Stack>
+          <Typography variant="body1">
+            In list <b>To do</b>
+          </Typography>
 
           <Description text={description} setText={setDescription} />
         </Box>
@@ -87,43 +84,40 @@ function CardModal() {
           <SingleSelectField
             options={['Jan Kowalski', 'Adam Jakistam', 'Bożena Costam']}
             loading={true}
-            label="Osoby"
+            label="Assignee"
             onChange={(_, value) => console.log(value)}
           />
 
           <SingleSelectField
-            label="Kamień milowy"
-            options={['Kamień milowy 1', 'Kamień milowy 2']}
+            label="Milestone"
+            options={['Milestone 1', 'Milestone 2']}
             loading={true}
             onChange={(_, value) => console.log(value)}
           />
 
-          <DateField
-            label="Data zakończenia"
-            onChange={value => console.log(value)}
-          />
+          <DateField label="Deadline" onChange={value => console.log(value)} />
 
           <MultiselectField
-            label="Etykiety"
+            label="Tags"
             options={[
-              { value: 'Etykieta 1', color: 'red' },
-              { value: 'Etykieta 2', color: 'blue' },
-              { value: 'Etykieta 3', color: 'green' },
+              { value: 'Tag 1', color: 'red' },
+              { value: 'Tag 2', color: 'blue' },
+              { value: 'Tag 3', color: 'green' },
             ]}
             loading={true}
             onChange={(_, value) => console.log(value)}
           />
 
           <TextField
-            label="Link do zadania"
+            label="Example custom text field"
             onChange={e => console.log(e.target.value)}
           />
           <NumberField
-            label="Numer zadania"
+            label="Example custom number field"
             onChange={e => console.log(e.target.value)}
           />
           <CheckboxField
-            label="Czy zakończono?"
+            label="Example custom checkbox field"
             onChange={(_, checked) => console.log(checked)}
           />
         </Box>
