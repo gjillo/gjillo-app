@@ -17,6 +17,7 @@ import MultiselectField from './Fields/MultiselectField'
 import NumberField from './Fields/NumberField'
 import CheckboxField from './Fields/CheckboxField'
 import EditableText from './EditableText'
+import CloseButton from './CloseButton'
 
 function CardModal() {
   const [cardName, setCardName] = React.useState('Card name')
@@ -38,10 +39,12 @@ function CardModal() {
           width: '100%',
           maxWidth: 800,
           minHeight: 400,
-          padding: 3,
+          padding: 4,
           display: 'flex',
+          position: 'relative',
         }}
       >
+        <CloseButton />
         <Box
           sx={{
             width: '50%',
