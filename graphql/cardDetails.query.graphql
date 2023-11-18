@@ -1,0 +1,22 @@
+query CardDetails($cardUuid: UUID!) {
+  card_details(cardUuid: $cardUuid) {
+    assignees {
+      name
+      uuid
+    }
+    column {
+      name
+    }
+    description
+    milestone {
+      name
+    }
+    name
+    tags {
+      color
+      value
+      uuid
+    }
+    deadline
+  }
+}

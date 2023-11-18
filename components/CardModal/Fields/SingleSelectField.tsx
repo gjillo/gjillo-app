@@ -6,13 +6,16 @@ interface Props {
   loading?: boolean
   label: string
   onChange: React.ComponentProps<typeof Autocomplete>['onChange']
+  value: string
 }
 
-function SingleSelectField({ options, loading, label, onChange }: Props) {
+function SingleSelectField({ options, loading, label, onChange, value }: Props) {
   return (
     <Autocomplete
       options={options}
       loading={loading || false}
+      value={value}
+      filterSelectedOptions
       renderOption={(props, option) => (
         <li {...props} key={option}>
           {option}

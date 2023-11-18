@@ -5,10 +5,12 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
-import {Project} from "@graphql/types";
+import {ProjectDetails} from "@graphql/types";
+import CardModal from '@components/CardModal';
 
 
-function Project(props: Project) {
+function Project(props: ProjectDetails) {
+
     return (
         <Paper elevation={1} sx={{ m: 1 }}>
             <Typography
@@ -28,6 +30,7 @@ function Project(props: Project) {
                     </Grid>
                 )}
             </Grid>
+            <CardModal cardUuid='a22bc7af-88a6-4ffe-a4de-5b60b717bed1' open={true} onClose={() => void false} />
         </Paper>
     )
 }
