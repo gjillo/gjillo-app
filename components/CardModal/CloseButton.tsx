@@ -11,7 +11,7 @@ function CloseButton() {
         top: '10px',
         right: '10px',
         padding: 0,
-        'min-width': 'unset',
+        'minWidth': 'unset',
         color: 'inherit',
       }}
     >
