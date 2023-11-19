@@ -4,6 +4,7 @@ import './globals.css'
 import ThemeRegistry from "@app/ThemeRegistry";
 import React from "react";
 import { ApolloWrapper } from "@app/ApolloWrapper"
+import { DataContext } from './DataContext';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,7 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ApolloWrapper>
-          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+          <DataContext>
+            <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+          </DataContext>
         </ApolloWrapper>
       </body>
     </html>

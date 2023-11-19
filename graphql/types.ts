@@ -18,6 +18,7 @@ export type Scalars = {
   HexColorCode: { input: any; output: any; }
   URL: { input: any; output: any; }
   UUID: { input: string; output: string; }
+  Void: { input: any; output: any; }
 };
 
 /** Basic card */
@@ -108,6 +109,8 @@ export type CardsMutation = {
   __typename?: 'CardsMutation';
   /** Create card */
   create: Card;
+  /** Swap card position with another card */
+  swap?: Maybe<Scalars['Void']['output']>;
   /** Update custom checkbox field */
   update_checkbox_field: Card;
   /** Update custom date field */
@@ -126,12 +129,19 @@ export type CardsMutation = {
 /** Card-specific mutations */
 export type CardsMutationCreateArgs = {
   assignee_uuids?: InputMaybe<Array<Scalars['UUID']['input']>>;
+  column_uuid: Scalars['UUID']['input'];
   deadline?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   milestone_uuid?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   story_points?: InputMaybe<Scalars['Int']['input']>;
   tag_uuids?: InputMaybe<Array<Scalars['UUID']['input']>>;
+};
+
+
+/** Card-specific mutations */
+export type CardsMutationSwapArgs = {
+  other_uuid: Scalars['UUID']['input'];
   uuid: Scalars['UUID']['input'];
 };
 
@@ -154,14 +164,14 @@ export type CardsMutationUpdate_Date_FieldArgs = {
 
 /** Card-specific mutations */
 export type CardsMutationUpdate_DetailsArgs = {
-  asignee_uuids: Array<Scalars['UUID']['input']>;
+  assignee_uuids?: InputMaybe<Array<Scalars['UUID']['input']>>;
+  column_uuid?: InputMaybe<Scalars['UUID']['input']>;
   deadline?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   milestone_uuid?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  order?: InputMaybe<Scalars['Int']['input']>;
   story_points?: InputMaybe<Scalars['Int']['input']>;
-  tag_uuids: Array<Scalars['UUID']['input']>;
+  tag_uuids?: InputMaybe<Array<Scalars['UUID']['input']>>;
   uuid: Scalars['UUID']['input'];
 };
 
@@ -209,19 +219,12 @@ export type Column = {
 /** Column-specific mutations */
 export type ColumnMutation = {
   __typename?: 'ColumnMutation';
-  /** Assign card */
-  assign_card: Column;
   /** Create column */
   create: Column;
+  /** Swap column position with another column */
+  swap?: Maybe<Scalars['Void']['output']>;
   /** Update column */
   update: Column;
-};
-
-
-/** Column-specific mutations */
-export type ColumnMutationAssign_CardArgs = {
-  card_uuid: Scalars['UUID']['input'];
-  column_uuid: Scalars['UUID']['input'];
 };
 
 
@@ -235,10 +238,16 @@ export type ColumnMutationCreateArgs = {
 
 
 /** Column-specific mutations */
+export type ColumnMutationSwapArgs = {
+  other_uuid: Scalars['UUID']['input'];
+  uuid: Scalars['UUID']['input'];
+};
+
+
+/** Column-specific mutations */
 export type ColumnMutationUpdateArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  order?: InputMaybe<Scalars['Int']['input']>;
   type?: InputMaybe<ColumnType>;
   uuid: Scalars['UUID']['input'];
 };
@@ -295,6 +304,8 @@ export type FieldValue = FieldCheckboxValue | FieldDateValue | FieldNumberValue 
 export type ICard = {
   /** Assigned users */
   assignees: Array<User>;
+  /** Assigned column */
+  column?: Maybe<Column>;
   /** Creation time */
   created: Scalars['DateTime']['output'];
   /** Deadline */
@@ -399,6 +410,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Mutations related to cards */
   cards: CardsMutation;
+  /** Mutations related to columns */
+  columns: ColumnMutation;
   /** Mutations related to milestones */
   milestones: MilestoneMutation;
   /** Mutations related to projects */
@@ -429,6 +442,8 @@ export type ProjectDetails = IProject & {
   milestones: Array<Milestone>;
   /** Display name */
   name: Scalars['String']['output'];
+  /** Tags */
+  tags: Array<Tag>;
   /** Assigned users */
   users: Array<ProjectUser>;
   /** Project UUID */

@@ -4,12 +4,7 @@ import {
   Paper,
   Typography,
   Box,
-  Chip,
-  Stack,
-  TextField,
   CircularProgress,
-  Snackbar,
-  Alert
 } from '@mui/material'
 
 import { useQuery } from "@apollo/client";
@@ -20,71 +15,57 @@ import SingleSelectField from './Fields/SingleSelectField'
 import DateField from './Fields/DateField'
 import Description from './Description'
 import MultiselectField from './Fields/MultiselectField'
-import NumberField from './Fields/NumberField'
-import CheckboxField from './Fields/CheckboxField'
 import EditableText from './EditableText'
 import CloseButton from './CloseButton'
 import { CardDetailsDocument, Milestone, User, Tag } from '@graphql/types';
+import { useDataContext, IDataContext } from "@app/DataContext";
 
-interface Props {
-  open: boolean
-  onClose: () => void
-  cardUuid: string
-}
-
-function CardModal({open, onClose, cardUuid}: Props) {
+function CardModal() {
   const [cardName, setCardName] = useState('Card name')
   const [description, setDescription] = useState(
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia nulla tenetur eaque veritatis excepturi beatae quos laudantium, optio necessitatibus maiores!'
   )
-
   const [assignees, setAssignees] = useState<User[]>([])
   const [milestone, setMilestone] = useState<Milestone['name']>(null)
   const [deadline, setDeadline] = useState<string | null>(null)
   const [tags, setTags] = useState<Tag[]>([])
 
-  const { loading, data, error } = useQuery(CardDetailsDocument, {
+  const [dataMirrored, setDataMirrored] = useState(false)
+
+  const {cardModal: { open, setOpen, cardUuid }} = useDataContext() as IDataContext
+
+  const {data, loading, error, refetch} = useQuery(CardDetailsDocument, {
     variables: {
-      cardUuid
-    }
+      cardUuid,
+    },
+    skip: !cardUuid
   })
 
   useEffect(() => {
-    if (data?.card_details?.name) {
-      setCardName(data.card_details.name)
+    if (cardUuid) {
+      refetch({
+        cardUuid
+      })
+      console.log('refetch')
     }
-    console.log(data)
-  }, [data?.card_details?.name])
+  }, [cardUuid])
 
   useEffect(() => {
-    if (data?.card_details?.description) {
-      setDescription(data.card_details.description)
-    }
-  }, [data?.card_details?.description])
+    setDataMirrored(false)
+  }, [loading])
 
   useEffect(() => {
-    if (data?.card_details?.assignees) {
-      setAssignees(data.card_details.assignees)
-    }
-  }, [data?.card_details?.assignees])
+    setCardName(data?.card_details?.name || '')
+    setDescription(data?.card_details?.description || '')
+    setAssignees(data?.card_details?.assignees || [])
+    setMilestone(data?.card_details?.milestone?.name || null)
+    setDeadline(data?.card_details?.deadline || null)
+    setTags(data?.card_details?.tags || [])
+  }, [data])
 
   useEffect(() => {
-    if (data?.card_details?.milestone) {
-      setMilestone(data.card_details.milestone.name)
-    }
-  }, [data?.card_details?.milestone])
-
-  useEffect(() => {
-    if (data?.card_details?.deadline) {
-      setDeadline(data.card_details.deadline)
-    }
-  }, [data?.card_details?.deadline])
-
-  useEffect(() => {
-    if (data?.card_details?.tags) {
-      setTags(data.card_details.tags)
-    }
-  }, [data?.card_details?.tags])
+    setDataMirrored(true)
+  }, [cardName, description, assignees, milestone, deadline, tags, data])
 
   return (
     <Modal
@@ -95,9 +76,9 @@ function CardModal({open, onClose, cardUuid}: Props) {
         justifyContent: 'center',
         border: 'none'
       }}
-      onClose={onClose}
+      onClose={() => setOpen(false)}
     >
-      {loading ? <CircularProgress /> : (<Paper
+      {loading || !dataMirrored ? <CircularProgress /> : (<Paper
         sx={{
           width: '100%',
           maxWidth: 800,
@@ -162,7 +143,7 @@ function CardModal({open, onClose, cardUuid}: Props) {
 
           <SingleSelectField
             label="Milestone"
-            options={['This is milestone', 'Milestone 2']}
+            options={['Milestone 1', 'Milestone 2', 'Milestone 3']}
             loading={true}
             onChange={(_, value) => console.log(value)}
             value={milestone as string}

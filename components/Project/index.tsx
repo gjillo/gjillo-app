@@ -7,6 +7,7 @@ import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
 import {ProjectDetails} from "@graphql/types";
 import CardModal from '@components/CardModal';
+import { useDataContext, IDataContext } from "@app/DataContext";
 
 
 function Project(props: ProjectDetails) {
@@ -30,7 +31,7 @@ function Project(props: ProjectDetails) {
                     </Grid>
                 )}
             </Grid>
-            <CardModal cardUuid='a22bc7af-88a6-4ffe-a4de-5b60b717bed1' open={true} onClose={() => void false} />
+            <CardModal />
         </Paper>
     )
 }

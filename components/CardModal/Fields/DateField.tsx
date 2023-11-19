@@ -14,7 +14,7 @@ interface Props {
 function DateField({ label, onChange, value }: Props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Picker label={label} value={dayjs(value)} onChange={onChange} />
+      <Picker label={label} value={value ? dayjs(value) : null} onChange={onChange} />
     </LocalizationProvider>
   )
 }
