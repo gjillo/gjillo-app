@@ -37,6 +37,7 @@ function CardModal() {
 
   const [getCardData, {data, loading, error}] = useLazyQuery(CardDetailsDocument)
 
+  // When the cardUuid changes, fetch the card data
   useEffect(() => {
     if (cardUuid) {
       getCardData({
@@ -45,10 +46,10 @@ function CardModal() {
           projectUuid: pathname.split('/')[2]
         },
       })
-      console.log(pathname.split('/')[2])
     }
   }, [cardUuid])
 
+  // When the card data changes, mirror the changes in the local state
   useEffect(() => {
     setCardName(data?.card_details?.name || null)
     setDescription(data?.card_details?.description || null)
