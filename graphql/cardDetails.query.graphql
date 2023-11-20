@@ -1,4 +1,4 @@
-query CardDetails($cardUuid: UUID!) {
+query CardDetails($cardUuid: UUID!, $projectUuid: UUID!) {
   card_details(cardUuid: $cardUuid) {
     assignees {
       name
@@ -18,5 +18,18 @@ query CardDetails($cardUuid: UUID!) {
       uuid
     }
     deadline
+  }
+
+  project(projectUuid: $projectUuid) {
+    milestones {
+      name
+    }
+    users {
+      name
+    }
+    tags {
+      value
+      color
+    }
   }
 }

@@ -6,7 +6,7 @@ interface Props {
   loading?: boolean
   label: string
   onChange: React.ComponentProps<typeof Autocomplete>['onChange']
-  value: string
+  value: string | null
 }
 
 function SingleSelectField({ options, loading, label, onChange, value }: Props) {
