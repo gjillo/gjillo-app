@@ -8,12 +8,12 @@ import Grid from "@mui/material/Grid";
 
 import CardModal from '@components/CardModal';
 
-import {Project} from "@graphql/types";
+import {ProjectDetails} from "@graphql/types";
 import AddColumn from "@components/AddColumnButton";
 import FakeColumn from '@components/FakeColumn';
 
 
-function Project(props: Project) {
+function Project(props: ProjectDetails) {
     const [isCreatingColumn, setIsCreatingColumn] = useState(false);
     const scrollable = React.useRef(null);
 
@@ -64,7 +64,7 @@ function Project(props: Project) {
                     }
                 </Grid>
             </Grid>
-            <CardModal />
+            <CardModal users={props.users} tags={props.tags} milestones={props.milestones} />
         </Paper>
     )
 }

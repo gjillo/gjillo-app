@@ -19,19 +19,16 @@ import Description from './Description'
 import MultiselectField from './Fields/MultiselectField'
 import EditableText from './EditableText'
 import CloseButton from './CloseButton'
-import { CardDetailsDocument, Milestone, User, Tag, Card } from '@graphql/types';
+import { CardDetailsDocument, Milestone, ProjectUser, Tag, Card, IUser } from '@graphql/types';
 import { useDataContext, IDataContext } from "@app/DataContext";
-import { usePathname } from 'next/navigation'
 
-function CardModal() {
+function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], milestones: Milestone[], tags: Tag[]}) {
   const [cardName, setCardName] = useState<Card['name']>(null)
   const [description, setDescription] = useState<Card['description']>(null)
-  const [assignees, setAssignees] = useState<User[]>([])
+  const [assignees, setAssignees] = useState<IUser[]>([])
   const [milestone, setMilestone] = useState<Milestone['name']>(null)
   const [deadline, setDeadline] = useState<string | null>(null)
   const [tags, setTags] = useState<Tag[]>([])
-
-  const pathname = usePathname()
 
   const {cardModal: { open, setOpen, cardUuid }} = useDataContext() as IDataContext
 
@@ -43,7 +40,6 @@ function CardModal() {
       getCardData({
         variables: {
           cardUuid,
-          projectUuid: pathname.split('/')[2]
         },
       })
     }
@@ -123,7 +119,7 @@ function CardModal() {
             >
 
               <MultiselectField 
-                options={data?.project?.users.map(user => ({ value: user.name || '' })) || []}
+                options={users.map(user => ({ value: user.name || '' })) || []}
                 label="Assignees"
                 onChange={(_, value) => console.log(value)}
                 value={assignees.map(assignee => ({ value: assignee.name || '' }))}
@@ -132,7 +128,7 @@ function CardModal() {
               <SingleSelectField
                 label="Milestone"
                 // options={['Milestone 1', 'Milestone 2', 'Milestone 3']}
-                options={data?.project?.milestones.map(milestone => milestone.name || '') || []}
+                options={milestones.map(milestone => milestone.name || '') || []}
                 onChange={(_, value) => console.log(value)}
                 value={milestone || null}
               />
@@ -141,7 +137,7 @@ function CardModal() {
 
               <MultiselectField
                 label="Tags"
-                options={data?.project?.tags || []}
+                options={tagsList || []}
                 onChange={(_, value) => console.log(value)}
                 value={tags}
               />
