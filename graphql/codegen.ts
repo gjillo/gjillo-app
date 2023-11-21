@@ -11,9 +11,9 @@ const config: CodegenConfig = {
         'graphql/types.ts': {
             config: {
                 scalars: {
-                    Timestamp: {
-                        input: 'number',
-                        output: 'number'
+                    DateTime: {
+                        input: 'string',
+                        output: 'string'
                     },
                     UUID: {
                         input: 'string',

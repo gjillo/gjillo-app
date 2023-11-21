@@ -5,12 +5,13 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import {Button, Chip} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import {Column} from "@graphql/types";
+import {ProjectQuery} from "@graphql/types";
 import ColumnCard from "@components/ColumnCard";
 import ColumnMenu from "@components/ColumnMenu";
 
+type Props = NonNullable<NonNullable<ProjectQuery['project']>["columns"]>[0]
 
-function Column(props: Column) {
+function Column(props: Props) {
   return (
     <Paper className={styles.column} elevation={3} sx={{ m: 2 }}>
       <Chip className={styles.column__tasksCounter} label={props.cards.length} size="small" />

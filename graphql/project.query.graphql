@@ -12,20 +12,30 @@ query Project($projectUuid: UUID!) {
             cards {
                 uuid
                 name
-                description
-                story_points
-                created
                 order
+                assignees {
+                    uuid
+                    image
+                }
+                tags {
+                    uuid
+                    value
+                    color
+                }
+                deadline
             }
         }
 
         milestones {
+            uuid
             name
         }
         users {
+            uuid
             name
         }
         tags {
+            uuid
             value
             color
         }

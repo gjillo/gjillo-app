@@ -5,15 +5,14 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
-
 import CardModal from '@components/CardModal';
-
-import {ProjectDetails} from "@graphql/types";
+import {ProjectQuery} from "@graphql/types";
 import AddColumn from "@components/AddColumnButton";
 import FakeColumn from '@components/FakeColumn';
 
+type Props = NonNullable<ProjectQuery['project']>
 
-function Project(props: ProjectDetails) {
+function Project(props: Props) {
     const [isCreatingColumn, setIsCreatingColumn] = useState(false);
     const scrollable = React.useRef(null);
 
