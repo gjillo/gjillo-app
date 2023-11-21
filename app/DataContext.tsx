@@ -11,7 +11,16 @@ interface IDataContext {
   }
 }
 
-const Context = React.createContext<IDataContext | null>(null)
+const defaultDataContext: IDataContext = {
+  cardModal: {
+    open: false,
+    setOpen: () => {},
+    cardUuid: '',
+    setCardUuid: () => {},
+  },
+}
+
+const Context = React.createContext<IDataContext>(defaultDataContext)
 
 function DataContext({children}: {children: React.ReactNode}) {
   const [cardModalOpen, setCardModalOpen] = useState(false)

@@ -13,14 +13,14 @@ import { useLazyQuery } from "@apollo/client";
 
 import React, { useEffect, useState } from 'react'
 
-import SingleSelectField from './Fields/SingleSelectField'
+import DropdownSingleField from './Fields/DropdownSingleField'
 import DateField from './Fields/DateField'
 import Description from './Description'
-import MultiselectField from './Fields/MultiselectField'
+import DropdownMultipleField from './Fields/DropdownMultipleField'
 import EditableText from './EditableText'
 import CloseButton from './CloseButton'
 import { CardDetailsDocument, Milestone, ProjectUser, Tag, Card, IUser } from '@graphql/types';
-import { useDataContext, IDataContext } from "@app/DataContext";
+import { useDataContext } from "@app/DataContext";
 
 function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], milestones: Milestone[], tags: Tag[]}) {
   const [cardName, setCardName] = useState<Card['name']>(null)
@@ -28,9 +28,9 @@ function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], m
   const [assignees, setAssignees] = useState<IUser[]>([])
   const [milestone, setMilestone] = useState<Milestone['name']>(null)
   const [deadline, setDeadline] = useState<string | null>(null)
-  const [tags, setTags] = useState<Tag[]>([])
+  const [tags, setTags] = useState<Omit<Tag, "uuid">[]>([])
 
-  const {cardModal: { open, setOpen, cardUuid }} = useDataContext() as IDataContext
+  const {cardModal: { open, setOpen, cardUuid }} = useDataContext()
 
   const [getCardData, {data, loading, error}] = useLazyQuery(CardDetailsDocument)
 
@@ -54,6 +54,31 @@ function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], m
     setDeadline(data?.card_details?.deadline || null)
     setTags(data?.card_details?.tags || [])
   }, [data])
+
+  const handleCardNameChange = (value: Card["name"]) => {
+    setCardName(value)
+    // TODO: add mutation
+  }
+
+  const handleDescriptionChange = (value: Card["description"]) => {
+    setDescription(value)
+  }
+
+  const handleAssigneesChange = (value: {value: string}[]) => {
+    setAssignees(value.map(user => ({ name: user.value })))
+  }
+
+  const handleMilestoneChange = (value: Milestone["name"]) => {
+    setMilestone(value)
+  }
+
+  const handleDeadlineChange = (value: string | null) => {
+    setDeadline(value)
+  }
+
+  const handleTagsChange = (value: Omit<Tag, "uuid">[]) => {
+    setTags(value)
+  }
 
   return (
       <Modal
@@ -86,7 +111,7 @@ function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], m
             >
               <EditableText
                 value={cardName || ''}
-                onValueChange={setCardName}
+                onValueChange={handleCardNameChange}
                 dialogTitle="Change card name"
               >
                 <Typography variant="h4">{cardName}</Typography>
@@ -95,7 +120,7 @@ function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], m
                 In list <b>{data?.card_details?.column?.name}</b>
               </Typography>
 
-              <Description text={description || ''} setText={setDescription} />
+              <Description text={description || ''} setText={handleDescriptionChange} />
             </Box>
             <Box
               sx={{
@@ -118,27 +143,26 @@ function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], m
               }}
             >
 
-              <MultiselectField 
+              <DropdownMultipleField 
                 options={users.map(user => ({ value: user.name || '' })) || []}
                 label="Assignees"
-                onChange={(_, value) => console.log(value)}
+                onChange={value => handleAssigneesChange(value)}
                 value={assignees.map(assignee => ({ value: assignee.name || '' }))}
               />
 
-              <SingleSelectField
+              <DropdownSingleField
                 label="Milestone"
-                // options={['Milestone 1', 'Milestone 2', 'Milestone 3']}
                 options={milestones.map(milestone => milestone.name || '') || []}
-                onChange={(_, value) => console.log(value)}
+                onChange={value => handleMilestoneChange(value)}
                 value={milestone || null}
               />
 
-              <DateField label="Deadline" value={deadline} onChange={value => console.log(value)} />
+              <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)} />
 
-              <MultiselectField
+              <DropdownMultipleField
                 label="Tags"
                 options={tagsList || []}
-                onChange={(_, value) => console.log(value)}
+                onChange={value => handleTagsChange(value)}
                 value={tags}
               />
 

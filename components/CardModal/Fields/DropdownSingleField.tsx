@@ -5,11 +5,11 @@ interface Props {
   options: string[]
   loading?: boolean
   label: string
-  onChange: React.ComponentProps<typeof Autocomplete>['onChange']
+  onChange: (value: string | null) => void
   value: string | null
 }
 
-function SingleSelectField({ options, loading, label, onChange, value }: Props) {
+function DropdownSingleField({ options, loading, label, onChange, value }: Props) {
   return (
     <Autocomplete
       options={options}
@@ -22,9 +22,9 @@ function SingleSelectField({ options, loading, label, onChange, value }: Props) 
         </li>
       )}
       renderInput={params => <TextField {...params} label={label} />}
-      onChange={onChange}
+      onChange={((_, value) => onChange(value))}
     />
   )
 }
 
-export default SingleSelectField
+export default DropdownSingleField
