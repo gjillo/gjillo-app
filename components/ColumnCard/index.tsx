@@ -1,17 +1,14 @@
 import React from 'react'
 import styles from './styles.module.scss'
 
-import { Button, Chip, Paper, Tooltip, Typography } from '@mui/material'
+import { Button, Chip, Paper, Typography } from '@mui/material'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import {Card} from "@graphql/types";
+import {ProjectQuery} from "@graphql/types";
 import {useDataContext} from "@app/DataContext";
 
-interface Label {
-  name: string
-  color: string
-}
+type Props = NonNullable<NonNullable<ProjectQuery['project']>["columns"]>[0]["cards"][0]
 
-function ColumnCard(props: Card) {
+function ColumnCard(props: Props) {
   const { cardModal: { setCardUuid, setOpen } } = useDataContext()
 
   const handleClick = () => {
@@ -36,8 +33,8 @@ function ColumnCard(props: Card) {
         {/*  </Tooltip>*/}
         {/*)}*/}
 
-        {props.created && (
-          <Chip className={styles.columncard__date} label={new Date(props.created).toLocaleDateString()} icon={<CalendarMonthIcon />} />
+        {props.deadline && (
+          <Chip className={styles.columncard__date} label={new Date(props.deadline).toLocaleDateString()} icon={<CalendarMonthIcon />} />
         )}
       </Paper>
     </Button>

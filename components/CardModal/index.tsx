@@ -19,10 +19,19 @@ import Description from './Description'
 import DropdownMultipleField from './Fields/DropdownMultipleField'
 import EditableText from './EditableText'
 import CloseButton from './CloseButton'
-import { CardDetailsDocument, Milestone, ProjectUser, Tag, Card, IUser } from '@graphql/types';
+import {
+  CardDetailsDocument,
+  Milestone,
+  Tag,
+  Card,
+  IUser,
+  ProjectQuery
+} from '@graphql/types';
 import { useDataContext } from "@app/DataContext";
 
-function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], milestones: Milestone[], tags: Tag[]}) {
+type Props = Pick<NonNullable<ProjectQuery["project"]>, "users" | "tags" | "milestones">
+
+function CardModal({users, milestones, tags: tagsList}: Props) {
   const [cardName, setCardName] = useState<Card['name']>(null)
   const [description, setDescription] = useState<Card['description']>(null)
   const [assignees, setAssignees] = useState<IUser[]>([])
