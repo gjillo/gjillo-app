@@ -53,6 +53,7 @@ function EditableText({
           textAlign: 'left',
           padding: 0,
           borderRadius: 0,
+          display: 'inline-block',
         }}
       >
         {children}

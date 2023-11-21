@@ -18,5 +18,16 @@ query Project($projectUuid: UUID!) {
                 order
             }
         }
+
+        milestones {
+            name
+        }
+        users {
+            name
+        }
+        tags {
+            value
+            color
+        }
     }
 }

@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './styles.module.scss'
 
-import { Avatar, Button, Chip, Paper, Tooltip, Typography } from '@mui/material'
+import { Button, Chip, Paper, Tooltip, Typography } from '@mui/material'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import {Card} from "@graphql/types";
+import {useDataContext} from "@app/DataContext";
 
 interface Label {
   name: string
@@ -11,8 +12,15 @@ interface Label {
 }
 
 function ColumnCard(props: Card) {
+  const { cardModal: { setCardUuid, setOpen } } = useDataContext()
+
+  const handleClick = () => {
+    setCardUuid(props.uuid)
+    setOpen(true)
+  }
+
   return (
-    <Button className={styles.columncard}>
+    <Button className={styles.columncard} onClick={handleClick}>
       <Paper className={styles.columncard__content} elevation={4}>
         <Typography variant="body1" className={styles.columncard__name}>{props.name}</Typography>
         {/*{labels && (*/}

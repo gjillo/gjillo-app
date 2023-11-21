@@ -1,19 +1,25 @@
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
 
+type Value = {
+  value: string
+  color?: string
+}
 interface Props {
-  options: { value: string; color: string }[]
+  options: Value[]
   loading?: boolean
   label: string
-  onChange: React.ComponentProps<typeof Autocomplete>['onChange']
+  onChange: (value: Value[]) => void 
+  value: Value[]
 }
 
-function MultiselectField({ options, loading, label, onChange }: Props) {
+function DropdownMultipleField({ options, loading, label, onChange, value }: Props) {
   return (
     <Autocomplete
-      onChange={onChange}
+      onChange={(_, value) => onChange(value)}
+      value={value}
       options={options}
-      getOptionLabel={option => option.value}
+      getOptionLabel={(option: Value) => option.value}
       filterSelectedOptions
       isOptionEqualToValue={(option, value) => option.value === value.value}
       multiple
@@ -29,7 +35,7 @@ function MultiselectField({ options, loading, label, onChange }: Props) {
           <Chip
             label={option.value}
             sx={{
-              bgcolor: option.color,
+              bgcolor: option.color ?? 'default',
             }}
             {...getTagProps({ index })}
             key={option.value}
@@ -40,4 +46,4 @@ function MultiselectField({ options, loading, label, onChange }: Props) {
   )
 }
 
-export default MultiselectField
+export default DropdownMultipleField

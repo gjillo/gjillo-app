@@ -23,7 +23,7 @@ function Description({ text, setText }: DescriptionProps) {
         multiline
         dialogTitle="Change card description"
       >
-        <Typography variant="body2">{text}</Typography>
+        <Typography variant="body2">{text === '' ? <i>Click here to add description</i> : text}</Typography>
       </EditableText>
     </Box>
   )

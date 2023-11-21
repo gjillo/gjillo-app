@@ -1,131 +1,180 @@
+"use client"
 import {
   Modal,
   Paper,
   Typography,
   Box,
-  Chip,
-  Stack,
-  TextField,
+  CircularProgress,
+  Snackbar,
+  Alert,
 } from '@mui/material'
 
-import React from 'react'
+import { useLazyQuery } from "@apollo/client";
 
-import SingleSelectField from './Fields/SingleSelectField'
+import React, { useEffect, useState } from 'react'
+
+import DropdownSingleField from './Fields/DropdownSingleField'
 import DateField from './Fields/DateField'
 import Description from './Description'
-import MultiselectField from './Fields/MultiselectField'
-import NumberField from './Fields/NumberField'
-import CheckboxField from './Fields/CheckboxField'
+import DropdownMultipleField from './Fields/DropdownMultipleField'
 import EditableText from './EditableText'
 import CloseButton from './CloseButton'
+import { CardDetailsDocument, Milestone, ProjectUser, Tag, Card, IUser } from '@graphql/types';
+import { useDataContext } from "@app/DataContext";
 
-function CardModal() {
-  const [cardName, setCardName] = React.useState('Card name')
-  const [description, setDescription] = React.useState(
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia nulla tenetur eaque veritatis excepturi beatae quos laudantium, optio necessitatibus maiores!'
-  )
+function CardModal({users, milestones, tags: tagsList}: {users: ProjectUser[], milestones: Milestone[], tags: Tag[]}) {
+  const [cardName, setCardName] = useState<Card['name']>(null)
+  const [description, setDescription] = useState<Card['description']>(null)
+  const [assignees, setAssignees] = useState<IUser[]>([])
+  const [milestone, setMilestone] = useState<Milestone['name']>(null)
+  const [deadline, setDeadline] = useState<string | null>(null)
+  const [tags, setTags] = useState<Omit<Tag, "uuid">[]>([])
+
+  const {cardModal: { open, setOpen, cardUuid }} = useDataContext()
+
+  const [getCardData, {data, loading, error}] = useLazyQuery(CardDetailsDocument)
+
+  // When the cardUuid changes, fetch the card data
+  useEffect(() => {
+    if (cardUuid) {
+      getCardData({
+        variables: {
+          cardUuid,
+        },
+      })
+    }
+  }, [cardUuid])
+
+  // When the card data changes, mirror the changes in the local state
+  useEffect(() => {
+    setCardName(data?.card_details?.name || null)
+    setDescription(data?.card_details?.description || null)
+    setAssignees(data?.card_details?.assignees || [])
+    setMilestone(data?.card_details?.milestone?.name || null)
+    setDeadline(data?.card_details?.deadline || null)
+    setTags(data?.card_details?.tags || [])
+  }, [data])
+
+  const handleCardNameChange = (value: Card["name"]) => {
+    setCardName(value)
+    // TODO: add mutation
+  }
+
+  const handleDescriptionChange = (value: Card["description"]) => {
+    setDescription(value)
+  }
+
+  const handleAssigneesChange = (value: {value: string}[]) => {
+    setAssignees(value.map(user => ({ name: user.value })))
+  }
+
+  const handleMilestoneChange = (value: Milestone["name"]) => {
+    setMilestone(value)
+  }
+
+  const handleDeadlineChange = (value: string | null) => {
+    setDeadline(value)
+  }
+
+  const handleTagsChange = (value: Omit<Tag, "uuid">[]) => {
+    setTags(value)
+  }
 
   return (
-    <Modal
-      open={true}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Paper
+      <Modal
+        open={open}
         sx={{
-          width: '100%',
-          maxWidth: 800,
-          minHeight: 400,
-          padding: 4,
           display: 'flex',
-          position: 'relative',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: 'none'
         }}
+        onClose={() => setOpen(false)}
       >
-        <CloseButton />
-        <Box
-          sx={{
-            width: '50%',
-            padding: 1,
-          }}
-        >
-          <EditableText
-            value={cardName}
-            onValueChange={setCardName}
-            dialogTitle="Change card name"
-          >
-            <Typography variant="h4">{cardName}</Typography>
-          </EditableText>
-          <Typography variant="body1">
-            In list <b>To do</b>
-          </Typography>
-
-          <Description text={description} setText={setDescription} />
-        </Box>
-        <Box
-          sx={{
-            width: '50%',
-            padding: 1,
-
-            '& > .MuiTextField-root, & > .MuiAutocomplete-root': {
+        <>
+          {loading || !!error ? <CircularProgress /> : (<Paper
+            sx={{
               width: '100%',
-              mb: 3,
-            },
+              maxWidth: 800,
+              minHeight: 400,
+              padding: 4,
+              display: 'flex',
+              position: 'relative',
+            }}
+          >
+            <CloseButton />
+            <Box
+              sx={{
+                width: '50%',
+                padding: 1,
+              }}
+            >
+              <EditableText
+                value={cardName || ''}
+                onValueChange={handleCardNameChange}
+                dialogTitle="Change card name"
+              >
+                <Typography variant="h4">{cardName}</Typography>
+              </EditableText>
+              <Typography variant="body1">
+                In list <b>{data?.card_details?.column?.name}</b>
+              </Typography>
 
-            '& > .MuiFormControlLabel-root': {
-              mb: 3,
-            },
+              <Description text={description || ''} setText={handleDescriptionChange} />
+            </Box>
+            <Box
+              sx={{
+                width: '50%',
+                padding: 1,
 
-            '& > .MuiTextField-root:last-child, & > .MuiAutocomplete-root:last-child, & > .MuiFormControlLabel-root:last-child':
-              {
-                mb: 0,
-              },
-          }}
-        >
-          <SingleSelectField
-            options={['Jan Kowalski', 'Adam Jakistam', 'Bożena Costam']}
-            loading={true}
-            label="Assignee"
-            onChange={(_, value) => console.log(value)}
-          />
+                '& > .MuiTextField-root, & > .MuiAutocomplete-root': {
+                  width: '100%',
+                  mb: 3,
+                },
 
-          <SingleSelectField
-            label="Milestone"
-            options={['Milestone 1', 'Milestone 2']}
-            loading={true}
-            onChange={(_, value) => console.log(value)}
-          />
+                '& > .MuiFormControlLabel-root': {
+                  mb: 3,
+                },
 
-          <DateField label="Deadline" onChange={value => console.log(value)} />
+                '& > .MuiTextField-root:last-child, & > .MuiAutocomplete-root:last-child, & > .MuiFormControlLabel-root:last-child':
+                  {
+                    mb: 0,
+                  },
+              }}
+            >
 
-          <MultiselectField
-            label="Tags"
-            options={[
-              { value: 'Tag 1', color: 'red' },
-              { value: 'Tag 2', color: 'blue' },
-              { value: 'Tag 3', color: 'green' },
-            ]}
-            loading={true}
-            onChange={(_, value) => console.log(value)}
-          />
+              <DropdownMultipleField 
+                options={users.map(user => ({ value: user.name || '' })) || []}
+                label="Assignees"
+                onChange={value => handleAssigneesChange(value)}
+                value={assignees.map(assignee => ({ value: assignee.name || '' }))}
+              />
 
-          <TextField
-            label="Example custom text field"
-            onChange={e => console.log(e.target.value)}
-          />
-          <NumberField
-            label="Example custom number field"
-            onChange={e => console.log(e.target.value)}
-          />
-          <CheckboxField
-            label="Example custom checkbox field"
-            onChange={(_, checked) => console.log(checked)}
-          />
-        </Box>
-      </Paper>
-    </Modal>
+              <DropdownSingleField
+                label="Milestone"
+                options={milestones.map(milestone => milestone.name || '') || []}
+                onChange={value => handleMilestoneChange(value)}
+                value={milestone || null}
+              />
+
+              <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)} />
+
+              <DropdownMultipleField
+                label="Tags"
+                options={tagsList || []}
+                onChange={value => handleTagsChange(value)}
+                value={tags}
+              />
+
+            </Box>
+          </Paper>)}
+          <Snackbar open={!!error}>
+            <Alert severity="error" sx={{ width: '100%' }}>
+              Error while fetching card data
+            </Alert>
+          </Snackbar>
+        </>
+      </Modal>
   )
 }
 
