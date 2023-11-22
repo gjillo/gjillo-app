@@ -1,0 +1,9 @@
+mutation UpdateCardTags($uuid: UUID!, $tagUuids: [UUID!]) {
+  cards {
+    update_details(uuid: $uuid, tag_uuids: $tagUuids) {
+      tags {
+        uuid
+      }
+    }
+  }
+}

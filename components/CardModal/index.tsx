@@ -7,9 +7,10 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  Backdrop,
 } from '@mui/material'
 
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 
 import React, { useEffect, useState } from 'react'
 
@@ -21,11 +22,17 @@ import EditableText from './EditableText'
 import CloseButton from './CloseButton'
 import {
   CardDetailsDocument,
+  UpdateCardNameDocument,
   Milestone,
   Tag,
   Card,
   IUser,
-  ProjectQuery
+  ProjectQuery,
+  UpdateCardDescriptionDocument,
+  UpdateCardTagsDocument,
+  UpdateCardAssigneesDocument,
+  UpdateCardDeadlineDocument,
+  UpdateCardMilestoneDocument
 } from '@graphql/types';
 import { useDataContext } from "@app/DataContext";
 
@@ -37,11 +44,18 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
   const [assignees, setAssignees] = useState<IUser[]>([])
   const [milestone, setMilestone] = useState<Milestone['name']>(null)
   const [deadline, setDeadline] = useState<string | null>(null)
-  const [tags, setTags] = useState<Omit<Tag, "uuid">[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
 
   const {cardModal: { open, setOpen, cardUuid }} = useDataContext()
 
-  const [getCardData, {data, loading, error}] = useLazyQuery(CardDetailsDocument)
+  const [getCardData, {data, loading: loadingCardData, error}] = useLazyQuery(CardDetailsDocument)
+
+  const [updateCardName, {loading: pendingCardNameUpdate}] = useMutation(UpdateCardNameDocument)
+  const [updateCardDescription, {loading: pendingCardDescriptionUpdate}] = useMutation(UpdateCardDescriptionDocument)
+  const [updateCardAssignees, {loading: pendingCardAssigneesUpdate}] = useMutation(UpdateCardAssigneesDocument)
+  const [updateCardTags, {loading: pendingCardTagsUpdate}] = useMutation(UpdateCardTagsDocument)
+  const [updateCardDeadline, {loading: pendingCardDeadlineUpdate}] = useMutation(UpdateCardDeadlineDocument)
+  const [updateCardMilestone, {loading: pendingCardMilestoneUpdate}] = useMutation(UpdateCardMilestoneDocument)
 
   // When the cardUuid changes, fetch the card data
   useEffect(() => {
@@ -66,28 +80,66 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
   const handleCardNameChange = (value: Card["name"]) => {
     setCardName(value)
-    // TODO: add mutation
+    updateCardName({
+      variables: {
+        uuid: cardUuid,
+        name: value,
+      }
+    })
   }
 
   const handleDescriptionChange = (value: Card["description"]) => {
     setDescription(value)
+    updateCardDescription({
+      variables: {
+        uuid: cardUuid,
+        description: value,
+      }
+    })
   }
 
-  const handleAssigneesChange = (value: {value: string}[]) => {
-    setAssignees(value.map(user => ({ name: user.value })))
+  const handleAssigneesChange = (value: {value: string, uuid: string}[]) => {
+    setAssignees(value.map(user => ({ name: user.value, uuid: user.uuid })))
+    
+    updateCardAssignees({
+      variables: {
+        uuid: cardUuid,
+        assigneeUuids: value.map(user => user.uuid)
+      }
+    })
   }
 
   const handleMilestoneChange = (value: Milestone["name"]) => {
     setMilestone(value)
+    updateCardMilestone({
+      variables: {
+        uuid: cardUuid,
+        milestoneUuid: milestones.find(milestone => milestone.name === value)?.uuid || null
+      }
+    })
   }
 
   const handleDeadlineChange = (value: string | null) => {
     setDeadline(value)
+    updateCardDeadline({
+      variables: {
+        uuid: cardUuid,
+        deadline: value
+      }
+    })
   }
 
-  const handleTagsChange = (value: Omit<Tag, "uuid">[]) => {
+  const handleTagsChange = (value: Tag[]) => {
     setTags(value)
+    updateCardTags({
+      variables: {
+        uuid: cardUuid,
+        tagUuids: value.map(tag => tag.uuid),
+      }
+    })
   }
+
+  const pendingDataUpdate = pendingCardNameUpdate || pendingCardDescriptionUpdate || pendingCardAssigneesUpdate || pendingCardTagsUpdate || pendingCardDeadlineUpdate || pendingCardMilestoneUpdate
 
   return (
       <Modal
@@ -101,7 +153,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
         onClose={() => setOpen(false)}
       >
         <>
-          {loading || !!error ? <CircularProgress /> : (<Paper
+          {loadingCardData || !!error ? <CircularProgress /> : (<Paper
             sx={{
               width: '100%',
               maxWidth: 800,
@@ -153,10 +205,10 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
             >
 
               <DropdownMultipleField 
-                options={users.map(user => ({ value: user.name || '' })) || []}
+                options={users.map(user => ({ value: user.name || '', uuid: user.uuid })) || []}
                 label="Assignees"
                 onChange={value => handleAssigneesChange(value)}
-                value={assignees.map(assignee => ({ value: assignee.name || '' }))}
+                value={assignees.map(assignee => ({ value: assignee.name || '', uuid: assignee.uuid }))}
               />
 
               <DropdownSingleField
@@ -175,6 +227,9 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
                 value={tags}
               />
 
+              {pendingDataUpdate && (<Backdrop open={true}>
+                <CircularProgress />
+              </Backdrop>)}
             </Box>
           </Paper>)}
           <Snackbar open={!!error}>

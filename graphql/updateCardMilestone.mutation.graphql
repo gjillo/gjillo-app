@@ -1,0 +1,9 @@
+mutation UpdateCardMilestone($uuid: UUID!, $milestoneUuid: UUID) {
+  cards {
+    update_details(uuid: $uuid, milestone_uuid: $milestoneUuid) {
+      milestone {
+        uuid
+      }
+    }
+  }
+}

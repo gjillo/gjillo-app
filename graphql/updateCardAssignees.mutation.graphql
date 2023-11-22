@@ -1,0 +1,10 @@
+mutation UpdateCardAssignees($uuid: UUID!, $assigneeUuids: [UUID!]) {
+  cards {
+    update_details(uuid: $uuid, assignee_uuids: $assigneeUuids) {
+      assignees {
+        uuid
+        name
+      }
+    }
+  }
+}
