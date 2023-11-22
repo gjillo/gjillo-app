@@ -23,7 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <ApolloWrapper>
           <DataContext>
-            <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+            <ThemeRegistry options={{ key: 'mui' }}>
+              {children}
+            </ThemeRegistry>
           </DataContext>
         </ApolloWrapper>
       </body>

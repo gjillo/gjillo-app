@@ -1,0 +1,24 @@
+subscription ColumnCreated {
+    column_created {
+        uuid
+        name
+        description
+        type
+        order
+        cards {
+            uuid
+            name
+            order
+            assignees {
+                uuid
+                image
+            }
+            tags {
+                uuid
+                value
+                color
+            }
+            deadline
+        }
+    }
+}

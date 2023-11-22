@@ -1,0 +1,11 @@
+mutation CreateColumn($project_uuid: UUID!) {
+    columns {
+        create(project_uuid: $project_uuid) {
+            uuid
+            name
+            type
+            order
+            description
+        }
+    }
+}

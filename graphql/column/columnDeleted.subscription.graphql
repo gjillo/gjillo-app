@@ -1,0 +1,3 @@
+subscription ColumnDeleted {
+    column_deleted
+}
