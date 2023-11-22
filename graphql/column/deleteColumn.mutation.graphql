@@ -1,0 +1,5 @@
+mutation DeleteColumn($uuid: UUID!) {
+    columns {
+        delete(uuid: $uuid)
+    }
+}

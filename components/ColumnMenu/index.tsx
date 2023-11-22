@@ -1,18 +1,35 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {Button, Divider, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList} from '@mui/material';
 import {Delete, MoreVert} from "@node_modules/@mui/icons-material";
 import Check from '@mui/icons-material/Check';
-import {Column, ColumnType} from "@graphql/types";
+import {Column, ColumnType, DeleteColumnDocument, Scalars} from "@graphql/types";
+import {useMutation} from "@node_modules/@apollo/client";
 
-function ColumnMenu({className, columnType}: {className: string, columnType: Column["type"]}) {
+type Props = {
+    className: string,
+    columnType: Column["type"]
+    columnUuid: Scalars["UUID"]["output"]
+}
+
+function ColumnMenu({className, columnType, columnUuid}: Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [deleteColumn] = useMutation(DeleteColumnDocument);
     const open = Boolean(anchorEl);
+
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleDelete = useCallback(() => {
+        console.log("Deleting", columnUuid);
+        void deleteColumn({variables: {uuid: columnUuid}});
+        handleClose();
+    },
+        [columnUuid]);
 
     return (
         <div className={className}>
@@ -69,7 +86,7 @@ function ColumnMenu({className, columnType}: {className: string, columnType: Col
                         <ListItemText>Other</ListItemText>
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={handleDelete}>
                         <ListItemIcon>
                             <Delete fontSize="small" />
                         </ListItemIcon>
