@@ -1,33 +1,14 @@
-import React from 'react'
-import {List, ListItem, ListItemButton, ListItemText, Typography} from "@mui/material";
+import {getSession} from "@utility/getSession";
+import {redirect} from "@node_modules/next/navigation";
 
-export default function Home() {
-    return (
-        <>
-            <Typography variant="h1">Home</Typography>
-            <List>
-                <ListItem>
-                    <ListItemButton href="/project/9634bfda-8673-45ea-8abd-52027cc343ea">
-                        <ListItemText>
-                            Sample project
-                        </ListItemText>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem>
-                    <ListItemButton href="/signin">
-                        <ListItemText>
-                            Sign In
-                        </ListItemText>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem>
-                    <ListItemButton href="/dashboard">
-                        <ListItemText>
-                            Dashboard
-                        </ListItemText>
-                    </ListItemButton>
-                </ListItem>
-            </List>
-        </>
-    )
+export default async function Home() {
+    const session = await getSession();
+
+    if (!session || !session.user) {
+        return redirect('/signin');
+    }
+
+    else {
+        return redirect('/dashboard');
+    }
 }
