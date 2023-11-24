@@ -1,0 +1,7 @@
+mutation UpdateCardDescription($uuid: UUID!, $description: String) {
+  cards {
+    update_details(uuid: $uuid, description: $description) {
+      description
+    }
+  }
+}
