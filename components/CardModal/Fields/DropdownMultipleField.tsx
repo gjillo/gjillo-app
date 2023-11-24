@@ -1,25 +1,25 @@
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
 
-type Value = {
+type Value<T> = {
   value: string
   color?: string
-}
-interface Props {
-  options: Value[]
+} & T
+interface Props<T> {
+  options: Value<T>[]
   loading?: boolean
   label: string
-  onChange: (value: Value[]) => void 
-  value: Value[]
+  onChange: (value: Value<T>[]) => void 
+  value: Value<T>[]
 }
 
-function DropdownMultipleField({ options, loading, label, onChange, value }: Props) {
+function DropdownMultipleField<T>({ options, loading, label, onChange, value }: Props<T>) {
   return (
     <Autocomplete
       onChange={(_, value) => onChange(value)}
       value={value}
       options={options}
-      getOptionLabel={(option: Value) => option.value}
+      getOptionLabel={(option: Value<T>) => option.value}
       filterSelectedOptions
       isOptionEqualToValue={(option, value) => option.value === value.value}
       multiple

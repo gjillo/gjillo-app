@@ -17,7 +17,6 @@ import React, { useEffect, useState } from 'react'
 import DropdownSingleField from './Fields/DropdownSingleField'
 import DateField from './Fields/DateField'
 import Description from './Description'
-import DropdownMultipleField from './Fields/DropdownMultipleField'
 import EditableText from './EditableText'
 import CloseButton from './CloseButton'
 import {
@@ -32,9 +31,12 @@ import {
   UpdateCardTagsDocument,
   UpdateCardAssigneesDocument,
   UpdateCardDeadlineDocument,
-  UpdateCardMilestoneDocument
+  UpdateCardMilestoneDocument,
+  ProjectUser
 } from '@graphql/types';
 import { useDataContext } from "@app/DataContext";
+import Assignees from './Assignees';
+import Tags from './Tags';
 
 type Props = Pick<NonNullable<ProjectQuery["project"]>, "users" | "tags" | "milestones">
 
@@ -98,13 +100,20 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
     })
   }
 
-  const handleAssigneesChange = (value: {value: string, uuid: string}[]) => {
-    setAssignees(value.map(user => ({ name: user.value, uuid: user.uuid })))
+  const handleAssigneesChange = (value: ProjectUser[]) => {
+    setAssignees(value)
     
+    const assigneeUuids = value.reduce((acc, assignee) => {
+      if (assignee.uuid) {
+        acc.push(assignee.uuid)
+      }
+      return acc
+    }, [] as string[])
+
     updateCardAssignees({
       variables: {
         uuid: cardUuid,
-        assigneeUuids: value.map(user => user.uuid)
+        assigneeUuids
       }
     })
   }
@@ -204,12 +213,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
               }}
             >
 
-              <DropdownMultipleField 
-                options={users.map(user => ({ value: user.name || '', uuid: user.uuid })) || []}
-                label="Assignees"
-                onChange={value => handleAssigneesChange(value)}
-                value={assignees.map(assignee => ({ value: assignee.name || '', uuid: assignee.uuid }))}
-              />
+              <Assignees assigneesList={users} selectedAssignees={assignees} handleAssigneesChange={handleAssigneesChange} />
 
               <DropdownSingleField
                 label="Milestone"
@@ -220,12 +224,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
               <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)} />
 
-              <DropdownMultipleField
-                label="Tags"
-                options={tagsList || []}
-                onChange={value => handleTagsChange(value)}
-                value={tags}
-              />
+              <Tags tagsList={tagsList} selectedTags={tags} handleTagsChange={handleTagsChange} />
 
               {pendingDataUpdate && (<Backdrop open={true}>
                 <CircularProgress />
