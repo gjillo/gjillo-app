@@ -1,6 +1,7 @@
 "use client"
 
 import React, {useEffect, useState} from 'react'
+import { DragDropContext } from 'react-beautiful-dnd'
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Column from "@components/Column";
@@ -77,35 +78,104 @@ function Project(props: Props) {
         );
     }
 
-    return (
-        <Paper elevation={1} sx={{m: 1}}>
-            <Typography
-                variant="h3"
-                sx={{m: 2}}
-            >{props.name}</Typography>
-            <Grid
-                ref={scrollable}
-                container
-                // spacing={2} breaks scrolling, children margin required
-                direction="row"
-                overflow="auto"
-                wrap={"nowrap"}
-                sx={{
-                    scrollBehavior: "smooth"
-                }}
-            >
-                {currentColumns.map((col: any) =>
-                    <Grid item key={col.uuid}>
-                        <Column {...col}></Column>
-                    </Grid>
-                )}
+    const handleDragEnd = (result: any) => {
+        const {destination, source, draggableId} = result;
 
-                <Grid item>
-                    <AddColumn onClick={() => createColumn({variables: {project_uuid: props.uuid}})}/>
+        if (!destination) {
+            return;
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return
+        }
+
+        const sourceColumn = currentColumns.find(c => c.uuid === source.droppableId);
+        const destinationColumn = currentColumns.find(c => c.uuid === destination.droppableId);
+        if (sourceColumn === undefined || destinationColumn === undefined) {
+            return;
+        }
+
+        if (sourceColumn.uuid === destinationColumn.uuid) {
+
+        const newCards = Array.from(sourceColumn.cards);
+        const removedCard = newCards.splice(source.index, 1)[0];
+        newCards.splice(destination.index, 0, removedCard);
+
+        const newColumn = {
+            ...sourceColumn,
+            cards: newCards
+        }
+
+        setCurrentColumns(prevColumns => prevColumns.map(c => {
+            if (c.uuid === newColumn.uuid) {
+                return newColumn;
+            }
+            return c;
+        }))
+        }
+        else {
+            const sourceCards = Array.from(sourceColumn.cards);
+            const removedCard = sourceCards.splice(source.index, 1)[0];
+
+            const destinationCards = Array.from(destinationColumn.cards);
+            destinationCards.splice(destination.index, 0, removedCard);
+
+            const newSourceColumn = {
+                ...sourceColumn,
+                cards: sourceCards
+            }
+
+            const newDestinationColumn = {
+                ...destinationColumn,
+                cards: destinationCards
+            }
+
+            setCurrentColumns(prevColumns => prevColumns.map(c => {
+                if (c.uuid === newSourceColumn.uuid) {
+                    return newSourceColumn;
+                }
+                if (c.uuid === newDestinationColumn.uuid) {
+                    return newDestinationColumn;
+                }
+                return c;
+            }))
+        }
+    }
+
+    return (
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <Paper elevation={1} sx={{m: 1}}>
+                <Typography
+                    variant="h3"
+                    sx={{m: 2}}
+                >{props.name}</Typography>
+                <Grid
+                    ref={scrollable}
+                    container
+                    // spacing={2} breaks scrolling, children margin required
+                    direction="row"
+                    overflow="auto"
+                    wrap={"nowrap"}
+                    sx={{
+                        scrollBehavior: "smooth"
+                    }}
+                >
+                    {currentColumns.map((col: any) =>
+                        <Grid item key={col.uuid}>
+                            <Column {...col}></Column>
+                        </Grid>
+                    )}
+
+                    <Grid item>
+                        <AddColumn onClick={() => createColumn({variables: {project_uuid: props.uuid}})}/>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <CardModal users={props.users} tags={props.tags} milestones={props.milestones}/>
-        </Paper>
+                <CardModal users={props.users} tags={props.tags} milestones={props.milestones}/>
+            </Paper>
+        </DragDropContext>
     )
 }
 
