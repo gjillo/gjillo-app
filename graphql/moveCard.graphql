@@ -1,0 +1,5 @@
+mutation MoveCard($uuidFrom: UUID!, $uuidTo: UUID!) {
+    cards {
+        move(uuid_from: $uuidFrom, uuid_to: $uuidTo)
+    }
+}
