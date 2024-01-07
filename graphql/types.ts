@@ -109,8 +109,12 @@ export type CardsMutation = {
   __typename?: 'CardsMutation';
   /** Create card */
   create: Card;
-  /** Swap card position with another card */
-  swap?: Maybe<Scalars['Void']['output']>;
+  /** Delete card */
+  delete?: Maybe<Scalars['UUID']['output']>;
+  /** Move card to another position and shift all cards in between */
+  move?: Maybe<Scalars['Void']['output']>;
+  /** Move card to empty column */
+  move_to_column?: Maybe<Scalars['Void']['output']>;
   /** Update custom checkbox field */
   update_checkbox_field: Card;
   /** Update custom date field */
@@ -140,9 +144,22 @@ export type CardsMutationCreateArgs = {
 
 
 /** Card-specific mutations */
-export type CardsMutationSwapArgs = {
-  other_uuid: Scalars['UUID']['input'];
+export type CardsMutationDeleteArgs = {
   uuid: Scalars['UUID']['input'];
+};
+
+
+/** Card-specific mutations */
+export type CardsMutationMoveArgs = {
+  uuid_from: Scalars['UUID']['input'];
+  uuid_to: Scalars['UUID']['input'];
+};
+
+
+/** Card-specific mutations */
+export type CardsMutationMove_To_ColumnArgs = {
+  card_uuid: Scalars['UUID']['input'];
+  column_uuid: Scalars['UUID']['input'];
 };
 
 
@@ -223,8 +240,8 @@ export type ColumnMutation = {
   create: Column;
   /** Deletes a column */
   delete: Scalars['UUID']['output'];
-  /** Swap column position with another column */
-  swap?: Maybe<Scalars['Void']['output']>;
+  /** Move column to another position and shift all columns in between */
+  move?: Maybe<Scalars['Void']['output']>;
   /** Update column */
   update: Column;
 };
@@ -246,9 +263,9 @@ export type ColumnMutationDeleteArgs = {
 
 
 /** Column-specific mutations */
-export type ColumnMutationSwapArgs = {
-  other_uuid: Scalars['UUID']['input'];
-  uuid: Scalars['UUID']['input'];
+export type ColumnMutationMoveArgs = {
+  uuid_from: Scalars['UUID']['input'];
+  uuid_to: Scalars['UUID']['input'];
 };
 
 
@@ -542,6 +559,8 @@ export type Subscription = {
   __typename?: 'Subscription';
   /** Card created */
   card_created: Card;
+  /** Card deleted */
+  card_deleted: Scalars['UUID']['output'];
   /** Card updated */
   card_updated: Card;
   /** Column created */
@@ -632,6 +651,22 @@ export type GetProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetProjectsQuery = { __typename?: 'Query', projects: Array<{ __typename?: 'Project', uuid: string, name: string }> };
 
+export type MoveCardMutationVariables = Exact<{
+  uuidFrom: Scalars['UUID']['input'];
+  uuidTo: Scalars['UUID']['input'];
+}>;
+
+
+export type MoveCardMutation = { __typename?: 'Mutation', cards: { __typename?: 'CardsMutation', move?: any | null } };
+
+export type MoveCardToColumnMutationVariables = Exact<{
+  cardUuid: Scalars['UUID']['input'];
+  columnUuid: Scalars['UUID']['input'];
+}>;
+
+
+export type MoveCardToColumnMutation = { __typename?: 'Mutation', cards: { __typename?: 'CardsMutation', move_to_column?: any | null } };
+
 export type ProjectQueryVariables = Exact<{
   projectUuid: Scalars['UUID']['input'];
 }>;
@@ -694,6 +729,8 @@ export const ColumnDeletedDocument = {"kind":"Document","definitions":[{"kind":"
 export const CreateColumnDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateColumn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"project_uuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"columns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"create"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"project_uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"project_uuid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"order"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]}}]} as unknown as DocumentNode<CreateColumnMutation, CreateColumnMutationVariables>;
 export const DeleteColumnDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteColumn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"columns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"delete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uuid"}}}]}]}}]}}]} as unknown as DocumentNode<DeleteColumnMutation, DeleteColumnMutationVariables>;
 export const GetProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetProjects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetProjectsQuery, GetProjectsQueryVariables>;
+export const MoveCardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MoveCard"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uuidFrom"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uuidTo"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"move"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uuid_from"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uuidFrom"}}},{"kind":"Argument","name":{"kind":"Name","value":"uuid_to"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uuidTo"}}}]}]}}]}}]} as unknown as DocumentNode<MoveCardMutation, MoveCardMutationVariables>;
+export const MoveCardToColumnDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MoveCardToColumn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"cardUuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"columnUuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"move_to_column"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"card_uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"cardUuid"}}},{"kind":"Argument","name":{"kind":"Name","value":"column_uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"columnUuid"}}}]}]}}]}}]} as unknown as DocumentNode<MoveCardToColumnMutation, MoveCardToColumnMutationVariables>;
 export const ProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Project"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectUuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectUuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectUuid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"created"}},{"kind":"Field","name":{"kind":"Name","value":"columns"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"order"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"cards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"order"}},{"kind":"Field","name":{"kind":"Name","value":"assignees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"image"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deadline"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"milestones"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]}}]} as unknown as DocumentNode<ProjectQuery, ProjectQueryVariables>;
 export const UpdateCardAssigneesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCardAssignees"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"assigneeUuids"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_details"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uuid"}}},{"kind":"Argument","name":{"kind":"Name","value":"assignee_uuids"},"value":{"kind":"Variable","name":{"kind":"Name","value":"assigneeUuids"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assignees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<UpdateCardAssigneesMutation, UpdateCardAssigneesMutationVariables>;
 export const UpdateCardDeadlineDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCardDeadline"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uuid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deadline"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cards"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_details"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uuid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uuid"}}},{"kind":"Argument","name":{"kind":"Name","value":"deadline"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deadline"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deadline"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateCardDeadlineMutation, UpdateCardDeadlineMutationVariables>;
