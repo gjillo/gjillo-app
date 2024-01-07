@@ -58,7 +58,7 @@ function ColumnCard(props: Props) {
         >
           <Paper className={styles.columncard__content} elevation={4}>
             <Typography variant="body1" className={styles.columncard__name}>
-              {props.name}
+              {!props.name || props.name === '' ? <i>No title</i> : props.name}
             </Typography>
             {/*{labels && (*/}
             {/*  <ul className={styles.columncard__labels}>*/}

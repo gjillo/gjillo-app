@@ -8,6 +8,7 @@ import Column from "@components/Column";
 import Grid from "@mui/material/Grid";
 import CardModal from '@components/CardModal';
 import {
+    CardCreatedDocument,
     ColumnCreatedDocument,
     ColumnDeletedDocument,
     CreateColumnDocument,
@@ -27,6 +28,8 @@ function Project(props: Props) {
     const {data: subscriptionCreatedColumns} = useSubscription(ColumnCreatedDocument);
 
     const {data: subscriptionDeletedColumns} = useSubscription(ColumnDeletedDocument);
+
+    const {data: subscriptionCardCreated} = useSubscription(CardCreatedDocument);
 
     const scrollable = React.useRef(null);
 
@@ -48,6 +51,33 @@ function Project(props: Props) {
         }
         setCurrentColumns((prevColumns) => prevColumns.filter(c => c.uuid !== subscriptionDeletedColumns.column_deleted))
     }, [subscriptionDeletedColumns]);
+
+    useEffect(() => {
+        if (subscriptionCardCreated === undefined) {
+            return;
+        }
+        const column = currentColumns.find(c => c.uuid === subscriptionCardCreated.card_created.column?.uuid);
+        if (column === undefined) {
+            return;
+        }
+        const newColumn = {
+            ...column
+        }
+
+        newColumn.cards.push({
+            uuid: subscriptionCardCreated.card_created.uuid,
+            order: subscriptionCardCreated.card_created.order,
+            assignees: [],
+            tags: [],
+        });
+
+        setCurrentColumns(prevColumns => prevColumns.map(c => {
+            if (c.uuid === newColumn.uuid) {
+                return newColumn;
+            }
+            return c;
+        }))
+    }, [subscriptionCardCreated])
 
     const scrollToLastColumn = () => {
         setTimeout(()=>{

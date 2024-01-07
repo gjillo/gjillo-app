@@ -41,7 +41,7 @@ import Tags from './Tags';
 type Props = Pick<NonNullable<ProjectQuery["project"]>, "users" | "tags" | "milestones">
 
 function CardModal({users, milestones, tags: tagsList}: Props) {
-  const [cardName, setCardName] = useState<Card['name']>(null)
+  const [cardName, setCardName] = useState<Card['name']>('')
   const [description, setDescription] = useState<Card['description']>(null)
   const [assignees, setAssignees] = useState<IUser[]>([])
   const [milestone, setMilestone] = useState<Milestone['name']>(null)
@@ -72,7 +72,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
   // When the card data changes, mirror the changes in the local state
   useEffect(() => {
-    setCardName(data?.card_details?.name || null)
+    setCardName(data?.card_details?.name || '')
     setDescription(data?.card_details?.description || null)
     setAssignees(data?.card_details?.assignees || [])
     setMilestone(data?.card_details?.milestone?.name || null)
@@ -184,7 +184,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
                 onValueChange={handleCardNameChange}
                 dialogTitle="Change card name"
               >
-                <Typography variant="h4">{cardName}</Typography>
+                <Typography variant="h4">{cardName === '' ? <i>Click to add title</i> : cardName}</Typography>
               </EditableText>
               <Typography variant="body1">
                 In list <b>{data?.card_details?.column?.name}</b>

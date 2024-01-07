@@ -3,14 +3,17 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { Button, Chip } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { ProjectQuery } from '@graphql/types'
+import { CreateCardDocument, ProjectQuery } from '@graphql/types'
 import ColumnCard from '@components/ColumnCard'
 import ColumnMenu from '@components/ColumnMenu'
 import { Droppable } from 'react-beautiful-dnd'
+import { useMutation } from '@apollo/client'
 
 type Props = NonNullable<NonNullable<ProjectQuery['project']>['columns']>[0]
 
 function Column(props: Props) {
+  const [createCard] = useMutation(CreateCardDocument);
+
   return (
     <Paper className={styles.column} elevation={3} sx={{ m: 2 }}>
       <Chip
@@ -54,7 +57,7 @@ function Column(props: Props) {
         )}
       </Droppable>
 
-      <Button className={styles.column__addTask}>
+      <Button className={styles.column__addTask} onClick={() => createCard({variables: {columnUuid: props.uuid}})}>
         <AddIcon /> Add Card
       </Button>
     </Paper>
