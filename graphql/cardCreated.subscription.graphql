@@ -1,0 +1,9 @@
+subscription CardCreated {
+  card_created {
+    column {
+      uuid
+    }
+    uuid
+    order
+  }
+}

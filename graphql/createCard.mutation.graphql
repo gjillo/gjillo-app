@@ -1,0 +1,7 @@
+mutation CreateCard($columnUuid: UUID!) {
+  cards {
+    create(column_uuid: $columnUuid) {
+      uuid
+    }
+  }
+}
