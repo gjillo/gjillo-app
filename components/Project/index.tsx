@@ -17,6 +17,9 @@ import AddColumn from "@components/AddColumnButton";
 import {useMutation, useSubscription} from "@node_modules/@apollo/client";
 import {CircularProgress} from "@node_modules/@mui/material";
 import Box from "@mui/material/Box";
+import {MoveCardDocument} from "@graphql/types";
+import {MoveCardToColumnDocument} from "@graphql/types";
+
 
 type Props = NonNullable<ProjectQuery['project']>
 
@@ -29,6 +32,10 @@ function Project(props: Props) {
     const {data: subscriptionDeletedColumns} = useSubscription(ColumnDeletedDocument);
 
     const scrollable = React.useRef(null);
+
+    const [moveCard, { }] = useMutation(MoveCardDocument)
+    const [moveCardToColumn, { }] = useMutation(MoveCardToColumnDocument)
+
 
     useEffect(() => {
         setCurrentColumns(props.columns);
@@ -99,22 +106,21 @@ function Project(props: Props) {
         }
 
         if (sourceColumn.uuid === destinationColumn.uuid) {
+            const newCards = Array.from(sourceColumn.cards);
+            const removedCard = newCards.splice(source.index, 1)[0];
+            newCards.splice(destination.index, 0, removedCard);
 
-        const newCards = Array.from(sourceColumn.cards);
-        const removedCard = newCards.splice(source.index, 1)[0];
-        newCards.splice(destination.index, 0, removedCard);
-
-        const newColumn = {
-            ...sourceColumn,
-            cards: newCards
-        }
-
-        setCurrentColumns(prevColumns => prevColumns.map(c => {
-            if (c.uuid === newColumn.uuid) {
-                return newColumn;
+            const newColumn = {
+                ...sourceColumn,
+                cards: newCards
             }
-            return c;
-        }))
+
+            setCurrentColumns(prevColumns => prevColumns.map(c => {
+                if (c.uuid === newColumn.uuid) {
+                    return newColumn;
+                }
+                return c;
+            }))
         }
         else {
             const sourceCards = Array.from(sourceColumn.cards);
@@ -142,6 +148,25 @@ function Project(props: Props) {
                 }
                 return c;
             }))
+        }
+
+        const movedCardUUID = sourceColumn.cards[source.index]?.uuid
+        const destinationCardUUID = destinationColumn.cards[destination.index]?.uuid
+
+        if (destinationCardUUID === undefined) {
+            moveCardToColumn({
+                variables: {
+                    cardUuid: movedCardUUID,
+                    columnUuid: destinationColumn.uuid
+                }
+            })
+        } else {
+            moveCard({
+                variables: {
+                    uuidFrom: movedCardUUID,
+                    uuidTo: destinationCardUUID
+                }
+            })
         }
     }
 
