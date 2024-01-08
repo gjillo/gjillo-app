@@ -5,26 +5,8 @@ import { Chip, Paper, Typography } from '@mui/material'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { ProjectQuery } from '@graphql/types'
 import { useDataContext } from '@app/DataContext'
-import {
-  Draggable,
-  DraggableStateSnapshot,
-  DraggingStyle,
-  NotDraggingStyle,
-} from 'react-beautiful-dnd'
-
-function getStyle(
-  style: DraggingStyle | NotDraggingStyle | undefined,
-  snapshot: DraggableStateSnapshot
-) {
-  if (!snapshot.isDropAnimating) {
-    return style
-  }
-  return {
-    ...style,
-    // cannot be 0, but make it super tiny
-    transitionDuration: `0.001s`,
-  }
-}
+import { Draggable } from 'react-beautiful-dnd'
+import disableDropAnimation from '@utility/disableDropAnimation'
 
 type Props = NonNullable<
   NonNullable<ProjectQuery['project']>['columns']
@@ -54,7 +36,7 @@ function ColumnCard(props: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          style={getStyle(provided.draggableProps.style, snapshot)}
+          style={disableDropAnimation(provided.draggableProps.style, snapshot)}
         >
           <Paper className={styles.columncard__content} elevation={4}>
             <Typography variant="body1" className={styles.columncard__name}>
