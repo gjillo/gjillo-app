@@ -1,0 +1,5 @@
+mutation MoveColumn($uuidFrom: UUID!, $uuidTo: UUID!) {
+  columns {
+    move(uuid_from: $uuidFrom, uuid_to: $uuidTo)
+  }
+}
