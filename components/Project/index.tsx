@@ -285,6 +285,7 @@ function Project(props: Props) {
                   </Grid>
                 ))}
 
+                {provided.placeholder}
                 <Grid item>
                   <AddColumn
                     onClick={() =>
@@ -293,7 +294,6 @@ function Project(props: Props) {
                   />
                 </Grid>
               </Grid>
-              {provided.placeholder}
             </div>
           )}
         </Droppable>
