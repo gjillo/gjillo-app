@@ -1,0 +1,5 @@
+mutation DeleteCard($cardUuid: UUID!) {
+  cards {
+    delete(uuid: $cardUuid)
+  }
+}

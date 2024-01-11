@@ -1,0 +1,3 @@
+subscription CardDeleted {
+  card_deleted
+}

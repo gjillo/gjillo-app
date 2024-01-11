@@ -9,6 +9,7 @@ import ColumnMenu from '@components/ColumnMenu'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import { useMutation } from '@apollo/client'
 import disableDropAnimation from '@utility/disableDropAnimation'
+import { useDataContext } from '@app/DataContext'
 
 type Props = NonNullable<NonNullable<ProjectQuery['project']>['columns']>[0] & {
   index: number
@@ -16,6 +17,8 @@ type Props = NonNullable<NonNullable<ProjectQuery['project']>['columns']>[0] & {
 
 function Column(props: Props) {
   const [createCard] = useMutation(CreateCardDocument)
+
+  const {dragAndDrop: {dragCardId, dragColumnId, isHoveringDisposeArea}} = useDataContext()
 
   return (
     <Draggable
@@ -31,7 +34,13 @@ function Column(props: Props) {
           {...provided.dragHandleProps}
           style={disableDropAnimation(provided.draggableProps.style, snapshot)}
         >
-          <Paper className={styles.column} elevation={3} sx={{ m: 2 }}>
+          <Paper className={styles.column} elevation={3} sx={{
+            m: 2,
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            transition: '.3s',
+            borderColor: dragColumnId === props.uuid && dragCardId === '' && isHoveringDisposeArea  ? 'error.main' : 'transparent'
+          }}>
             <Chip
               className={styles.column__tasksCounter}
               label={props.cards.length}
