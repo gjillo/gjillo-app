@@ -1,0 +1,7 @@
+subscription CardUpdated {
+  card_updated {
+    name
+    deadline
+    uuid
+  }
+}

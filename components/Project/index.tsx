@@ -10,6 +10,7 @@ import CardModal from '@components/CardModal'
 import {
   CardCreatedDocument,
   CardDeletedDocument,
+  CardUpdatedDocument,
   ColumnCreatedDocument,
   ColumnDeletedDocument,
   CreateColumnDocument,
@@ -43,6 +44,8 @@ function Project(props: Props) {
   const { data: subscriptionCardCreated } = useSubscription(CardCreatedDocument)
 
   const { data: subscriptionCardDeleted } = useSubscription(CardDeletedDocument)
+
+  const { data: subscriptionCardUpdated } = useSubscription(CardUpdatedDocument)
 
   const scrollable = React.useRef(null)
 
@@ -142,6 +145,42 @@ function Project(props: Props) {
       })
     )
   }, [subscriptionCardDeleted])
+
+  useEffect(() => {
+    if (subscriptionCardUpdated === undefined) {
+      return
+    }
+
+    const column = currentColumns.find(c =>
+      c.cards.some(card => card.uuid === subscriptionCardUpdated.card_updated.uuid)
+    )
+
+    if (column === undefined) {
+      return
+    }
+
+    const newColumn = {
+      ...column,
+      cards: column.cards.map(card => {
+        if (card.uuid === subscriptionCardUpdated.card_updated.uuid) {
+          return {
+            ...card,
+            ...subscriptionCardUpdated.card_updated,
+          }
+        }
+        return card
+      }),
+    }
+
+    setCurrentColumns(prevColumns =>
+      prevColumns.map(c => {
+        if (c.uuid === newColumn.uuid) {
+          return newColumn
+        }
+        return c
+      })
+    )
+  }, [subscriptionCardUpdated])
 
   const scrollToLastColumn = () => {
     setTimeout(() => {

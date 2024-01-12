@@ -10,7 +10,7 @@ import {
   Backdrop,
 } from '@mui/material'
 
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 
 import React, { useEffect, useState } from 'react'
 
@@ -32,7 +32,8 @@ import {
   UpdateCardAssigneesDocument,
   UpdateCardDeadlineDocument,
   UpdateCardMilestoneDocument,
-  ProjectUser
+  ProjectUser,
+  CardUpdatedDocument
 } from '@graphql/types';
 import { useDataContext } from "@app/DataContext";
 import Assignees from './Assignees';
@@ -50,7 +51,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
   const {cardModal: { open, setOpen, cardUuid }} = useDataContext()
 
-  const [getCardData, {data, loading: loadingCardData, error}] = useLazyQuery(CardDetailsDocument)
+  const [getCardData, {data, loading: loadingCardData, error, refetch}] = useLazyQuery(CardDetailsDocument)
 
   const [updateCardName, {loading: pendingCardNameUpdate}] = useMutation(UpdateCardNameDocument)
   const [updateCardDescription, {loading: pendingCardDescriptionUpdate}] = useMutation(UpdateCardDescriptionDocument)
@@ -58,6 +59,8 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
   const [updateCardTags, {loading: pendingCardTagsUpdate}] = useMutation(UpdateCardTagsDocument)
   const [updateCardDeadline, {loading: pendingCardDeadlineUpdate}] = useMutation(UpdateCardDeadlineDocument)
   const [updateCardMilestone, {loading: pendingCardMilestoneUpdate}] = useMutation(UpdateCardMilestoneDocument)
+
+  const {data: subscriptionCardUpdated} = useSubscription(CardUpdatedDocument)
 
   // When the cardUuid changes, fetch the card data
   useEffect(() => {
@@ -69,6 +72,12 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
       })
     }
   }, [cardUuid])
+
+  useEffect(() => {
+    if (subscriptionCardUpdated?.card_updated?.uuid === cardUuid) {
+      refetch()
+    }
+  }, [subscriptionCardUpdated])
 
   // When the card data changes, mirror the changes in the local state
   useEffect(() => {
