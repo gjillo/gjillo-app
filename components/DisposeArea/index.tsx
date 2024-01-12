@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Paper } from '@mui/material'
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useDataContext } from '@app/DataContext'
@@ -12,7 +12,7 @@ function DisposeArea() {
   return (
     <Droppable droppableId={'DisposeArea'} type="ColumnCards">
       {provided => (
-        <Box
+        <Paper
           ref={provided.innerRef}
           {...provided.droppableProps}
           sx={{
@@ -33,7 +33,7 @@ function DisposeArea() {
         >
           <DeleteIcon sx={{ color: 'error.main' }} />
           <div style={{ display: 'none' }}>{provided.placeholder}</div>
-        </Box>
+        </Paper>
       )}
     </Droppable>
   )
