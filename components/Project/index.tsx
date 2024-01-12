@@ -9,9 +9,11 @@ import Grid from '@mui/material/Grid'
 import CardModal from '@components/CardModal'
 import {
   CardCreatedDocument,
+  CardDeletedDocument,
   ColumnCreatedDocument,
   ColumnDeletedDocument,
   CreateColumnDocument,
+  DeleteCardDocument,
   MoveColumnDocument,
   ProjectQuery,
 } from '@graphql/types'
@@ -21,6 +23,8 @@ import { CircularProgress } from '@node_modules/@mui/material'
 import Box from '@mui/material/Box'
 import { MoveCardDocument } from '@graphql/types'
 import { MoveCardToColumnDocument } from '@graphql/types'
+import DisposeArea from '@components/DisposeArea'
+import { useDataContext } from '@app/DataContext'
 
 type Props = NonNullable<ProjectQuery['project']>
 
@@ -38,12 +42,20 @@ function Project(props: Props) {
 
   const { data: subscriptionCardCreated } = useSubscription(CardCreatedDocument)
 
+  const { data: subscriptionCardDeleted } = useSubscription(CardDeletedDocument)
+
   const scrollable = React.useRef(null)
 
   const [moveCard, {}] = useMutation(MoveCardDocument)
   const [moveCardToColumn, {}] = useMutation(MoveCardToColumnDocument)
 
   const [moveColumn] = useMutation(MoveColumnDocument)
+
+  const [deleteCard] = useMutation(DeleteCardDocument)
+
+  const {
+    dragAndDrop: { setIsDragging },
+  } = useDataContext()
 
   useEffect(() => {
     setCurrentColumns(props.columns)
@@ -101,6 +113,36 @@ function Project(props: Props) {
     )
   }, [subscriptionCardCreated])
 
+  useEffect(() => {
+    if (subscriptionCardDeleted === undefined) {
+      return
+    }
+
+    const column = currentColumns.find(c =>
+      c.cards.some(card => card.uuid === subscriptionCardDeleted.card_deleted)
+    )
+
+    if (column === undefined) {
+      return
+    }
+
+    const newColumn = {
+      ...column,
+      cards: column.cards.filter(
+        card => card.uuid !== subscriptionCardDeleted.card_deleted
+      ),
+    }
+
+    setCurrentColumns(prevColumns =>
+      prevColumns.map(c => {
+        if (c.uuid === newColumn.uuid) {
+          return newColumn
+        }
+        return c
+      })
+    )
+  }, [subscriptionCardDeleted])
+
   const scrollToLastColumn = () => {
     setTimeout(() => {
       const element = scrollable.current
@@ -130,7 +172,12 @@ function Project(props: Props) {
     )
   }
 
+  const handleDragStart = (result: any) => {
+    setIsDragging(true)
+  }
+
   const handleDragEnd = (result: any) => {
+    setIsDragging(false)
     if (!result.destination) {
       return
     }
@@ -142,7 +189,9 @@ function Project(props: Props) {
       return
     }
 
-    if (result.type === 'ColumnCards') {
+    if (result.destination.droppableId === 'DisposeArea') {
+      handleCardDispose(result)
+    } else if (result.type === 'ColumnCards') {
       handleCardDragEnd(result)
     } else if (result.type === 'Columns') {
       handleColumnDragEnd(result)
@@ -161,7 +210,6 @@ function Project(props: Props) {
 
     setCurrentColumns(newColumns)
 
-    console.log(movedColumnUUID, destinationColumnUUID)
     moveColumn({
       variables: {
         uuidFrom: movedColumnUUID,
@@ -249,9 +297,35 @@ function Project(props: Props) {
     }
   }
 
+  const handleCardDispose = (result: any) => {
+    const { draggableId, source } = result
+
+    const column = currentColumns.find(c => c.uuid === source.droppableId)
+
+    if (column === undefined) {
+      return
+    }
+
+    const newColumn = {
+      ...column,
+      cards: column.cards.filter(c => c.uuid !== draggableId),
+    }
+
+    setCurrentColumns(prevColumns =>
+      prevColumns.map(c => {
+        if (c.uuid === newColumn.uuid) {
+          return newColumn
+        }
+        return c
+      })
+    )
+
+    deleteCard({ variables: { cardUuid: draggableId } })
+  }
+
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Paper elevation={1} sx={{ m: 1 }}>
+    <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+      <Paper elevation={1} sx={{ m: 1, position: 'relative' }}>
         <Typography variant="h3" sx={{ m: 2 }}>
           {props.name}
         </Typography>
@@ -274,18 +348,23 @@ function Project(props: Props) {
                   scrollBehavior: 'smooth',
                 }}
               >
-                {/* {currentColumns.map((col: any) =>
-                        <Grid item key={col.uuid}>
-                            <Column {...col}></Column>
-                        </Grid>
-                    )} */}
-                {currentColumns.map((col: any, index: number) => (
-                  <Grid item key={col.uuid}>
-                    <Column {...col} index={index}></Column>
-                  </Grid>
-                ))}
+                <Grid
+                  container
+                  // spacing={2} breaks scrolling, children margin required
+                  direction="row"
+                  wrap={'nowrap'}
+                  width="auto"
+                >
+                  {currentColumns.map((col: any, index: number) => (
+                    <Grid item key={col.uuid} order={index}>
+                      <Column {...col} index={index}></Column>
+                    </Grid>
+                  ))}
 
-                {provided.placeholder}
+                  <Grid item order={999999}>
+                    {provided.placeholder}
+                  </Grid>
+                </Grid>
                 <Grid item>
                   <AddColumn
                     onClick={() =>
@@ -302,6 +381,7 @@ function Project(props: Props) {
           tags={props.tags}
           milestones={props.milestones}
         />
+        <DisposeArea />
       </Paper>
     </DragDropContext>
   )

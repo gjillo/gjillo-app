@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { Card } from '@graphql/types'
 import React, { useState } from 'react'
 
@@ -9,6 +9,11 @@ interface IDataContext {
     cardUuid: Card['uuid']
     setCardUuid: (uuid: Card['uuid']) => void
   }
+
+  dragAndDrop: {
+    isDragging: boolean
+    setIsDragging: (isDragging: boolean) => void
+  }
 }
 
 const defaultDataContext: IDataContext = {
@@ -18,13 +23,20 @@ const defaultDataContext: IDataContext = {
     cardUuid: '',
     setCardUuid: () => {},
   },
+
+  dragAndDrop: {
+    isDragging: false,
+    setIsDragging: () => {},
+  },
 }
 
 const Context = React.createContext<IDataContext>(defaultDataContext)
 
-function DataContext({children}: {children: React.ReactNode}) {
+function DataContext({ children }: { children: React.ReactNode }) {
   const [cardModalOpen, setCardModalOpen] = useState(false)
   const [cardUuid, setCardUuid] = useState<Card['uuid']>('')
+
+  const [isDragging, setIsDragging] = useState(false)
 
   const value: IDataContext = {
     cardModal: {
@@ -33,13 +45,14 @@ function DataContext({children}: {children: React.ReactNode}) {
       cardUuid,
       setCardUuid,
     },
+
+    dragAndDrop: {
+      isDragging,
+      setIsDragging,
+    },
   }
 
-  return (
-    <Context.Provider value={value}>
-      {children}
-    </Context.Provider>
-  )
+  return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
 function useDataContext() {

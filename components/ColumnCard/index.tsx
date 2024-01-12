@@ -38,7 +38,12 @@ function ColumnCard(props: Props) {
           {...provided.dragHandleProps}
           style={disableDropAnimation(provided.draggableProps.style, snapshot)}
         >
-          <Paper className={styles.columncard__content} elevation={4}>
+          <Paper className={styles.columncard__content} elevation={4} sx={{
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            borderColor: snapshot.draggingOver == 'DisposeArea' ? 'error.main' : 'transparent',
+            transition: 'border-color 0.3s',
+          }}>
             <Typography variant="body1" className={styles.columncard__name}>
               {!props.name || props.name === '' ? <i>No title</i> : props.name}
             </Typography>
