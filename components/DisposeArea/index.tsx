@@ -16,7 +16,7 @@ function DisposeArea() {
           ref={provided.innerRef}
           {...provided.droppableProps}
           sx={{
-            position: 'fixed',
+            position: 'absolute',
             top: '10px',
             right: '10px',
             width: '150px',

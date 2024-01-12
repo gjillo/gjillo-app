@@ -325,7 +325,7 @@ function Project(props: Props) {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-      <Paper elevation={1} sx={{ m: 1 }}>
+      <Paper elevation={1} sx={{ m: 1, position: 'relative' }}>
         <Typography variant="h3" sx={{ m: 2 }}>
           {props.name}
         </Typography>
