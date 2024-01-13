@@ -17,6 +17,7 @@ import {
 } from '@graphql/types';
 import {useDataContext} from "@app/DataContext";
 import { PieChart } from '@mui/x-charts/PieChart';
+import CardList from "@components/MilestoneModal/CardList";
 
 
 export default function MilestoneModal() {
@@ -102,11 +103,13 @@ export default function MilestoneModal() {
           {loadingMilestoneData || !!error ? <CircularProgress /> : (<Paper
             sx={{
               width: '100%',
-              maxWidth: 800,
+              maxWidth: 1000,
+              maxHeight: 700,
               minHeight: 400,
               padding: 4,
               display: 'flex',
               position: 'relative',
+              overflow: 'auto'
             }}
           >
             <CloseButton
@@ -128,40 +131,26 @@ export default function MilestoneModal() {
               <Typography variant="body1">
                 In progress
               </Typography>
-
-              {/*temp*/}
               <br/>
-              Todo
-              <br/>
-              {todoCards
-                  .map(card =>
-                      <div>{card.name}</div>
-                  )
-              }
-              <br/>
-              InProgress
-              <br/>
-              {inProgressCards
-                  .map(card =>
-                      <div>{card.name}</div>
-                  )
-              }
-              <br/>
-              Done
-              <br/>
-              {doneCards
-                  .map(card =>
-                      <div>{card.name}</div>
-                  )
-              }
-              {/*  end temp*/}
+              <CardList
+                  title={'Todo'}
+                  cards={todoCards}
+              />
+              <CardList
+                  title={'In progress'}
+                  cards={inProgressCards}
+              />
+              <CardList
+                  title={'Done'}
+                  cards={doneCards}
+              />
             </Box>
             <Box
                 sx={{
-                width: '50%',
-                padding: 1,
+                  width: '50%',
+                  padding: 1,
 
-                '& > .MuiTextField-root, & > .MuiAutocomplete-root': {
+                  '& > .MuiTextField-root, & > .MuiAutocomplete-root': {
                   width: '100%',
                   mb: 3,
                 },
