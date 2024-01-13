@@ -181,7 +181,9 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
               position: 'relative',
             }}
           >
-            <CloseButton />
+            <CloseButton
+              setOpenFunction={useDataContext().cardModal.setOpen}
+            />
             <Box
               sx={{
                 width: '50%',

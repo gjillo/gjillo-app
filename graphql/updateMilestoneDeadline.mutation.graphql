@@ -1,0 +1,7 @@
+mutation UpdateMilestoneDeadline($uuid: UUID!, $deadline: DateTime) {
+  milestones {
+    update(uuid: $uuid, deadline: $deadline) {
+      deadline
+    }
+  }
+}

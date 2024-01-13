@@ -1,0 +1,7 @@
+mutation UpdateMilestoneName($uuid: UUID!, $name: String) {
+  milestones {
+    update(uuid: $uuid, name: $name) {
+      name
+    }
+  }
+}

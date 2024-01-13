@@ -1,0 +1,29 @@
+query Milestone($milestoneUuid: UUID!) {
+    milestone(milestoneUuid: $milestoneUuid) {
+        uuid
+        name
+        deadline
+        creation_timestamp
+        cards {
+            name
+            order
+            deadline
+            column {
+                uuid
+                type
+            }
+            created
+            assignees {
+                name
+                uuid
+                image
+            }
+            tags {
+                uuid
+                value
+                color
+            }
+            uuid
+        }
+    }
+}

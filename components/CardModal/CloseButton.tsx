@@ -2,14 +2,15 @@ import React from 'react'
 
 import { Button } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { useDataContext, IDataContext } from '@app/DataContext'
 
-function CloseButton() {
-  const {cardModal: { setOpen }} = useDataContext() as IDataContext
+type Props = {
+    setOpenFunction: (open: boolean) => void
+}
 
+function CloseButton({ setOpenFunction }: Props) {
   return (
     <Button
-      onClick={() => setOpen(false)}
+      onClick={() => setOpenFunction(false)}
       sx={{
         position: 'absolute',
         top: '10px',

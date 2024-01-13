@@ -26,6 +26,7 @@ import { MoveCardDocument } from '@graphql/types'
 import { MoveCardToColumnDocument } from '@graphql/types'
 import DisposeArea from '@components/DisposeArea'
 import { useDataContext } from '@app/DataContext'
+import MilestoneModal from "@components/MilestoneModal";
 
 type Props = NonNullable<ProjectQuery['project']>
 
@@ -420,6 +421,7 @@ function Project(props: Props) {
           tags={props.tags}
           milestones={props.milestones}
         />
+        <MilestoneModal/>
         <DisposeArea />
       </Paper>
     </DragDropContext>
