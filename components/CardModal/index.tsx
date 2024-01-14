@@ -10,8 +10,7 @@ import {
   Alert,
   Backdrop,
 } from '@mui/material'
-import DonutLargeIcon from '@mui/icons-material/DonutLarge';
-
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 
 import React, { useEffect, useState } from 'react'
@@ -256,7 +255,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
                       onClick={openMilestone}
                       disabled={!milestone}
                   >
-                    <DonutLargeIcon
+                    <OpenInNewIcon
                         sx={{
                           color: '#757575'
                         }}
