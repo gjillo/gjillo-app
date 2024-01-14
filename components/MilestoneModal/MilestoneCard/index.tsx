@@ -34,6 +34,7 @@ const {
             name={props.name}
             deadline={props.deadline}
             tags={props.tags}
+            assignees={props.assignees}
         />
       </Box>
   )

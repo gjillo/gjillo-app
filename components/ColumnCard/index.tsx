@@ -39,6 +39,7 @@ function ColumnCard(props: Props) {
             name={props.name}
             deadline={props.deadline}
             tags={props.tags}
+            assignees={props.assignees}
             sx={{
               borderWidth: '2px',
               borderStyle: 'solid',

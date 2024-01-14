@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import CalendarMonthIcon from "@node_modules/@mui/icons-material/CalendarMonth";
 import React from "react";
 import {ProjectQuery} from "@graphql/types";
-import {SxProps} from "@mui/material";
+import {Avatar, AvatarGroup, SxProps, Tooltip} from "@mui/material";
 
 type Card = NonNullable<
     NonNullable<ProjectQuery['project']>['columns']
@@ -13,10 +13,12 @@ type Props = {
     name: Card['name']
     deadline: Card['deadline'],
     tags: Card['tags'],
+    assignees: Card['assignees'],
     sx?: SxProps,
 }
 
 export default function CardInner (props: Props) {
+    console.log(props.assignees)
     return (
         <div
             className={styles.card}
@@ -32,11 +34,15 @@ export default function CardInner (props: Props) {
                     ))}
                 </ul>
                 )}
-                {/*{assignee && (*/}
-                {/*  <Tooltip title={assignee}>*/}
-                {/*    <Avatar className={styles.assignee} src="/to/be/changed.png" />*/}
-                {/*  </Tooltip>*/}
-                {/*)}*/}
+                {props.assignees && (
+                    <AvatarGroup max={3} className={styles.assignees}>
+                        {props.assignees.map(ass =>
+                            <Tooltip title={ass.name}>
+                                <Avatar src={ass.image} className={styles.avatar}/>
+                            </Tooltip>
+                        )}
+                    </AvatarGroup>
+                )}
 
                 {props.deadline && (
                     <Chip
