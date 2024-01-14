@@ -8,16 +8,19 @@ import DateField from '../CardModal/Fields/DateField'
 import EditableText from '../CardModal/EditableText'
 import CloseButton from '../CardModal/CloseButton'
 import {
+  CardUpdatedDocument,
   ColumnType,
   Milestone,
   MilestoneDocument,
   MilestoneQuery,
   UpdateMilestoneDeadlineDocument,
   UpdateMilestoneNameDocument,
+  MilestoneUpdatedDocument,
 } from '@graphql/types';
 import {useDataContext} from "@app/DataContext";
 import { PieChart } from '@mui/x-charts/PieChart';
 import CardList from "@components/MilestoneModal/CardList";
+import {useSubscription} from "@node_modules/@apollo/client";
 
 
 export default function MilestoneModal() {
@@ -35,6 +38,7 @@ export default function MilestoneModal() {
 
   const [updateMilestoneName, {loading: pendingMilestoneNameUpdate}] = useMutation(UpdateMilestoneNameDocument)
   const [updateMilestoneDeadline, {loading: pendingMilestoneDeadlineUpdate}] = useMutation(UpdateMilestoneDeadlineDocument)
+  const { data: subscriptionMilestoneUpdated } = useSubscription(MilestoneUpdatedDocument)
 
 
   // When the milestoneUuid changes, fetch the card data
@@ -87,6 +91,19 @@ export default function MilestoneModal() {
         cards.filter(card => card.column?.type == ColumnType.Done)
     )
   }, [cards])
+
+  useEffect(() => {
+    if (subscriptionMilestoneUpdated === undefined) {
+      return
+    }
+    if (subscriptionMilestoneUpdated.milestone_updated.name != null) {
+      setMilestoneName(subscriptionMilestoneUpdated.milestone_updated.name)
+    }
+    if (subscriptionMilestoneUpdated.milestone_updated.deadline != null) {
+      setDeadline(subscriptionMilestoneUpdated.milestone_updated.deadline)
+
+    }
+  }, [subscriptionMilestoneUpdated])
 
   return (
       <Modal

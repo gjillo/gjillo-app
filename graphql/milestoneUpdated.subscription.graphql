@@ -1,0 +1,8 @@
+subscription MilestoneUpdated {
+    milestone_updated {
+        uuid
+        name
+        deadline
+        creation_timestamp
+    }
+}
