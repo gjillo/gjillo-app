@@ -1,5 +1,5 @@
 "use client"
-import {Alert, Box, CircularProgress, Modal, Paper, Snackbar, Typography,} from '@mui/material'
+import {Alert, Box, CircularProgress, Modal, Paper, Snackbar, Typography, Grid} from '@mui/material'
 
 import {useLazyQuery, useMutation} from "@apollo/client";
 
@@ -115,79 +115,72 @@ export default function MilestoneModal() {
             <CloseButton
                 setOpenFunction={useDataContext().milestoneModal.setOpen}
             />
-            <Box
-                sx={{
-                  width: '50%',
-                  padding: 1,
-                }}
-            >
-              <EditableText
-                  value={milestoneName || ''}
-                  onValueChange={handleMilestoneNameChange}
-                  dialogTitle="Change milestone name"
-              >
-                <Typography variant="h4">{milestoneName === '' ? <i>Click to add title</i> : milestoneName}</Typography>
-              </EditableText>
-              <Typography variant="body1">
-                In progress
-              </Typography>
-              <br/>
-              <CardList
-                  title={'Todo'}
-                  cards={todoCards}
-              />
-              <CardList
-                  title={'In progress'}
-                  cards={inProgressCards}
-              />
-              <CardList
-                  title={'Done'}
-                  cards={doneCards}
-              />
-            </Box>
-            <Box
-                sx={{
-                  width: '50%',
-                  padding: 1,
+            <Grid container spacing={2} sx={{
+              // display: 'flex',
+              // flexDirection: 'column',
+              width: '100%',
+            }}>
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <EditableText
+                    value={milestoneName || ''}
+                    onValueChange={handleMilestoneNameChange}
+                    dialogTitle="Change milestone name"
+                >
+                  <Typography variant="h4">{milestoneName === '' ?
+                      <i>Click to add title</i> : milestoneName}</Typography>
+                </EditableText>
+                <Typography variant="body1">
+                  In progress
+                </Typography>
+              </Grid>
 
-                  '& > .MuiTextField-root, & > .MuiAutocomplete-root': {
-                  width: '100%',
-                  mb: 3,
-                },
+              <Grid item xs={6}>
+                <CardList
+                    title={'Todo'}
+                    cards={todoCards}
+                />
+                <CardList
+                    title={'In progress'}
+                    cards={inProgressCards}
+                />
+                <CardList
+                    title={'Done'}
+                    cards={doneCards}
+                />
+              </Grid>
 
-                '& > .MuiFormControlLabel-root': {
-                  mb: 3,
-                },
-
-                '& > .MuiTextField-root:last-child, & > .MuiAutocomplete-root:last-child, & > .MuiFormControlLabel-root:last-child':
-                  {
-                    mb: 0,
-                  },
-              }}
-            >
-              <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)} />
-              <PieChart
-                  series={[
-                    {
-                      data: [
-                        { id: 0, value: todoCards.length, label: 'Todo', color: '#999999' },
-                        { id: 1, value: inProgressCards.length, label: 'In progress', color: '#ff9800' },
-                        { id: 2, value: doneCards.length, label: 'Done', color: '#8bc34a' },
-                      ],
-                      innerRadius: 80,
-                      outerRadius: 100,
-                      paddingAngle: 1,
-                      cornerRadius: 5,
-                      startAngle: -90,
-                      endAngle: 90,
-                      cx: 150,
-                      cy: 150,
-                    },
-                  ]}
-                  width={400}
-                  height={200}
-              />
-            </Box>
+              <Grid item xs={6}>
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'sticky',
+                  top: 0,
+                }}>
+                  <PieChart
+                      series={[
+                        {
+                          data: [
+                            {id: 0, value: todoCards.length, label: 'Todo', color: '#999999'},
+                            {id: 1, value: inProgressCards.length, label: 'In progress', color: '#ff9800'},
+                            {id: 2, value: doneCards.length, label: 'Done', color: '#8bc34a'},
+                          ],
+                          innerRadius: 80,
+                          outerRadius: 100,
+                          paddingAngle: 1,
+                          cornerRadius: 5,
+                          startAngle: -90,
+                          endAngle: 90,
+                          cx: 150,
+                          cy: 150,
+                        },
+                      ]}
+                      width={400}
+                      height={200}
+                  />
+                  <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)}/>
+                </Box>
+              </Grid>
+            </Grid>
           </Paper>)}
           <Snackbar open={!!error}>
             <Alert severity="error" sx={{ width: '100%' }}>

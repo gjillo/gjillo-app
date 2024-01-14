@@ -50,8 +50,8 @@ function DataContext({ children }: { children: React.ReactNode }) {
   const [cardModalOpen, setCardModalOpen] = useState(false)
   const [cardUuid, setCardUuid] = useState<Card['uuid']>('')
 
-  const [milestoneModalOpen, setMilestoneModalOpen] = useState(true)
-  const [milestoneUuid, setMilestoneUuid] = useState<Milestone['uuid']>('b1b14525-38d6-47d8-8cdc-c99ec72a5dda')
+  const [milestoneModalOpen, setMilestoneModalOpen] = useState(false)
+  const [milestoneUuid, setMilestoneUuid] = useState<Milestone['uuid']>('')
 
   const [isDragging, setIsDragging] = useState(false)
 

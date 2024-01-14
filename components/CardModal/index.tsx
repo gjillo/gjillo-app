@@ -4,11 +4,13 @@ import {
   Paper,
   Typography,
   Box,
+  IconButton ,
   CircularProgress,
   Snackbar,
   Alert,
   Backdrop,
 } from '@mui/material'
+import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 
 import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 
@@ -38,6 +40,7 @@ import {
 import { useDataContext } from "@app/DataContext";
 import Assignees from './Assignees';
 import Tags from './Tags';
+import Grid from "@mui/material/Grid";
 
 type Props = Pick<NonNullable<ProjectQuery["project"]>, "users" | "tags" | "milestones">
 
@@ -50,6 +53,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
   const [tags, setTags] = useState<Tag[]>([])
 
   const {cardModal: { open, setOpen, cardUuid }} = useDataContext()
+  const {milestoneModal: { setOpen: setMilestoneOpen, setMilestoneUuid }} = useDataContext()
 
   const [getCardData, {data, loading: loadingCardData, error, refetch}] = useLazyQuery(CardDetailsDocument)
 
@@ -159,6 +163,14 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
   const pendingDataUpdate = pendingCardNameUpdate || pendingCardDescriptionUpdate || pendingCardAssigneesUpdate || pendingCardTagsUpdate || pendingCardDeadlineUpdate || pendingCardMilestoneUpdate
 
+  const openMilestone = () => {
+    const milestoneUuid = milestones.find(m => m.name === milestone)?.uuid
+    if (milestoneUuid) {
+      setMilestoneUuid(milestoneUuid)
+    }
+    setMilestoneOpen(true)
+  }
+
   return (
       <Modal
         open={open}
@@ -226,12 +238,32 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
               <Assignees assigneesList={users} selectedAssignees={assignees} handleAssigneesChange={handleAssigneesChange} />
 
-              <DropdownSingleField
-                label="Milestone"
-                options={milestones.map(milestone => milestone.name || '') || []}
-                onChange={value => handleMilestoneChange(value)}
-                value={milestone || null}
-              />
+              <Grid container spacing={2} sx={{mb: 3}}>
+                <Grid item xs={10}>
+                  <DropdownSingleField
+                      label="Milestone"
+                      options={milestones.map(milestone => milestone.name || '') || []}
+                      onChange={value => handleMilestoneChange(value)}
+                      value={milestone || null}
+                  />
+                </Grid>
+                <Grid item xs={'auto'} sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                  <IconButton
+                      onClick={openMilestone}
+                      disabled={!milestone}
+                  >
+                    <DonutLargeIcon
+                        sx={{
+                          color: '#757575'
+                        }}
+                    />
+                  </IconButton >
+                </Grid>
+              </Grid>
 
               <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)} />
 
