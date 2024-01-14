@@ -33,6 +33,7 @@ const {
         <Card
             name={props.name}
             deadline={props.deadline}
+            tags={props.tags}
         />
       </Box>
   )

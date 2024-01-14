@@ -12,6 +12,7 @@ type Card = NonNullable<
 type Props = {
     name: Card['name']
     deadline: Card['deadline'],
+    tags: Card['tags'],
     sx?: SxProps,
 }
 
@@ -24,13 +25,13 @@ export default function CardInner (props: Props) {
                 <Typography variant="body1" className={styles.name}>
                     {!props.name || props.name === '' ? <i>No title</i> : props.name}
                 </Typography>
-                {/*{labels && (*/}
-                {/*  <ul className={styles.labels}>*/}
-                {/*    {labels.map(label => (*/}
-                {/*      <li key={label.name}><Chip className={styles.label} label={label.name} sx={{ backgroundColor: label.color }} size="small" /></li>*/}
-                {/*    ))}*/}
-                {/*</ul>*/}
-                {/*)}*/}
+                {props.tags && (
+                  <ul className={styles.labels}>
+                    {props.tags.map(tag => (
+                      <li key={tag.value}><Chip className={styles.label} label={tag.value} sx={{ backgroundColor: tag.color }} size="small" /></li>
+                    ))}
+                </ul>
+                )}
                 {/*{assignee && (*/}
                 {/*  <Tooltip title={assignee}>*/}
                 {/*    <Avatar className={styles.assignee} src="/to/be/changed.png" />*/}
