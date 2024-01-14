@@ -1,5 +1,5 @@
 'use client'
-import { Card } from '@graphql/types'
+import {Card, Milestone} from '@graphql/types'
 import React, { useState } from 'react'
 
 interface IDataContext {
@@ -8,6 +8,13 @@ interface IDataContext {
     setOpen: (open: boolean) => void
     cardUuid: Card['uuid']
     setCardUuid: (uuid: Card['uuid']) => void
+  }
+
+  milestoneModal: {
+    open: boolean
+    setOpen: (open: boolean) => void
+    milestoneUuid: Milestone['uuid']
+    setMilestoneUuid: (uuid: Milestone['uuid']) => void
   }
 
   dragAndDrop: {
@@ -24,6 +31,13 @@ const defaultDataContext: IDataContext = {
     setCardUuid: () => {},
   },
 
+  milestoneModal: {
+    open: false,
+    setOpen: () => {},
+    milestoneUuid: '',
+    setMilestoneUuid: () => {},
+  },
+
   dragAndDrop: {
     isDragging: false,
     setIsDragging: () => {},
@@ -36,6 +50,9 @@ function DataContext({ children }: { children: React.ReactNode }) {
   const [cardModalOpen, setCardModalOpen] = useState(false)
   const [cardUuid, setCardUuid] = useState<Card['uuid']>('')
 
+  const [milestoneModalOpen, setMilestoneModalOpen] = useState(false)
+  const [milestoneUuid, setMilestoneUuid] = useState<Milestone['uuid']>('')
+
   const [isDragging, setIsDragging] = useState(false)
 
   const value: IDataContext = {
@@ -44,6 +61,13 @@ function DataContext({ children }: { children: React.ReactNode }) {
       setOpen: setCardModalOpen,
       cardUuid,
       setCardUuid,
+    },
+
+    milestoneModal: {
+      open: milestoneModalOpen,
+      setOpen: setMilestoneModalOpen,
+      milestoneUuid,
+      setMilestoneUuid,
     },
 
     dragAndDrop: {
