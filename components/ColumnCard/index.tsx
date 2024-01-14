@@ -33,6 +33,7 @@ function ColumnCard(props: Props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={disableDropAnimation(provided.draggableProps.style, snapshot)}
+          onClick={handleClick}
         >
           <Card
             name={props.name}
@@ -43,7 +44,6 @@ function ColumnCard(props: Props) {
               borderColor: snapshot.draggingOver == 'DisposeArea' ? 'error.main' : 'transparent',
               transition: 'border-color 0.3s',
             }}
-            onClick={handleClick}
           />
         </div>
       )}

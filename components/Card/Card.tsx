@@ -13,14 +13,12 @@ type Props = {
     name: Card['name']
     deadline: Card['deadline'],
     sx?: SxProps,
-    onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
 export default function CardInner (props: Props) {
     return (
         <div
-            className={styles.columncard}
-            onClick={props.onClick}
+            className={styles.card}
         >
             <Paper className={styles.content} elevation={4} sx={props.sx}>
                 <Typography variant="body1" className={styles.name}>
