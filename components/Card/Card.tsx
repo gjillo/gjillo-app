@@ -37,7 +37,7 @@ export default function CardInner (props: Props) {
                     <AvatarGroup max={3} className={styles.assignees}>
                         {props.assignees.map(ass =>
                             <Tooltip title={ass.name}>
-                                <Avatar src={ass.image} className={styles.avatar}/>
+                                <Avatar src={ass.image} className={styles.avatar} data-cy="assigneeImage"/>
                             </Tooltip>
                         )}
                     </AvatarGroup>
