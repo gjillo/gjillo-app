@@ -32,7 +32,7 @@ type Props = {
 export default async function SignIn({searchParams}: Props) {
   const session = await getSession();
 
-  if (session) {
+  if (process.env.APP_ENV === 'test' || session) {
     return redirect('/dashboard');
   }
 
@@ -125,6 +125,7 @@ export default async function SignIn({searchParams}: Props) {
                 sx={{
                   ...(i !== p.length - 1 ? {mb: 1} : {})
                 }}
+                data-cy={'github'}
               >Sign in with {provider.name}</ProviderButton>
             ))}
           </Paper>

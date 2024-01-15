@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 function AddColumn({onClick}: { onClick?: React.MouseEventHandler<HTMLButtonElement>}) {
     return (
         <Paper elevation={3} sx={{ m: 2, p: 1 }}>
-            <Button onClick={onClick}><AddIcon /></Button>
+            <Button onClick={onClick} data-cy={'addColumn'}><AddIcon /></Button>
         </Paper>
     )
 }

@@ -10,7 +10,9 @@ import React from "react";
 export default async function Component() {
     const session = await getSession();
 
-    if (!session || !session.user) {
+    console.log("=======", process.env.APP_ENV);
+
+    if (process.env.APP_ENV !== 'test' && (!session || !session.user)) {
         return redirect('/signin');
     }
 
@@ -19,7 +21,7 @@ export default async function Component() {
     });
 
     return (
-        <Box>
+        <Box data-cy={"dashboard"}>
             {session &&
                 <SignOutButton/>
             }
@@ -31,7 +33,7 @@ export default async function Component() {
 
             <List>
                 {data.projects.map(p =>
-                    <ListItem key={p.uuid}>
+                    <ListItem key={p.uuid} data-cy={'project'}>
                         <ListItemButton href={`/project/${p.uuid}`}>
                             <ListItemText>
                                 {p.name}

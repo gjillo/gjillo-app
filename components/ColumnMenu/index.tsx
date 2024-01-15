@@ -39,6 +39,7 @@ function ColumnMenu({className, columnType, columnUuid}: Props) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
+                data-cy={'columnMenu'}
             >
                 <MoreVert  />
             </Button>
@@ -86,7 +87,7 @@ function ColumnMenu({className, columnType, columnUuid}: Props) {
                         <ListItemText>Other</ListItemText>
                     </MenuItem>
                     <Divider />
-                    <MenuItem onClick={handleDelete}>
+                    <MenuItem onClick={handleDelete} data-cy={'deleteColumn'}>
                         <ListItemIcon>
                             <Delete fontSize="small" />
                         </ListItemIcon>

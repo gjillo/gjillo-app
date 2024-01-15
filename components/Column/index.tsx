@@ -33,6 +33,7 @@ function Column(props: Props) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={disableDropAnimation(provided.draggableProps.style, snapshot)}
+          data-cy={'column'}
         >
           <Paper className={styles.column} elevation={3} sx={{
             m: 2,
