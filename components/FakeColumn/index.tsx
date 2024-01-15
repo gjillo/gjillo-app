@@ -22,7 +22,7 @@ function FakeColumn({onFinished}: { onFinished?: React.MouseEventHandler<HTMLBut
       <Chip className={styles.column__tasksCounter} label={0} size="small" />
       <Typography className={styles.column__title} variant="h2">{"Name placeholder"}</Typography>
       <Typography className={styles.column__type} variant="h3" fontSize={"small"}>{"Description placeholder"}</Typography>
-      <ColumnMenu className={styles.column__menu} columnType={null}/>
+      <ColumnMenu className={styles.column__menu} columnType={null} columnUuid={''}/>
       <Button className={styles.column__addTask} onClick={onFinished}>Temp finish creating/submit</Button>
       <Button className={styles.column__addTask}><AddIcon /> Add card</Button>
     </Paper>
