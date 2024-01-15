@@ -17,7 +17,7 @@ export default async function Component() {
     });
 
     return (
-        <Box>
+        <Box data-cy={"dashboard"}>
             <Typography variant="h1">Dashboard</Typography>
 
             <Box sx={{height: "3rem"}} />

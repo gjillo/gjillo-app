@@ -125,6 +125,7 @@ export default async function SignIn({searchParams}: Props) {
                 sx={{
                   ...(i !== p.length - 1 ? {mb: 1} : {})
                 }}
+                data-cy={'github'}
               >Sign in with {provider.name}</ProviderButton>
             ))}
           </Paper>
