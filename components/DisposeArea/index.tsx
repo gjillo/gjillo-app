@@ -6,7 +6,7 @@ import { Droppable } from 'react-beautiful-dnd'
 
 function DisposeArea() {
   const {
-    dragAndDrop: { isDragging },
+    dragAndDrop: { showDisposeArea },
   } = useDataContext()
 
   return (
@@ -27,7 +27,7 @@ function DisposeArea() {
             borderWidth: '2px',
             borderStyle: 'solid',
             borderColor: 'error.main',
-            opacity: isDragging ? 1 : 0,
+            opacity: showDisposeArea ? 1 : 0,
             transition: 'opacity 0.3s',
           }}
         >

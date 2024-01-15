@@ -20,6 +20,8 @@ interface IDataContext {
   dragAndDrop: {
     isDragging: boolean
     setIsDragging: (isDragging: boolean) => void
+    showDisposeArea: boolean
+    setShowDisposeArea: (isShown: boolean) => void
   }
 }
 
@@ -41,6 +43,8 @@ const defaultDataContext: IDataContext = {
   dragAndDrop: {
     isDragging: false,
     setIsDragging: () => {},
+    showDisposeArea: false,
+    setShowDisposeArea: () => {},
   },
 }
 
@@ -54,6 +58,7 @@ function DataContext({ children }: { children: React.ReactNode }) {
   const [milestoneUuid, setMilestoneUuid] = useState<Milestone['uuid']>('')
 
   const [isDragging, setIsDragging] = useState(false)
+  const [showDisposeArea, setShowDisposeArea] = useState(false)
 
   const value: IDataContext = {
     cardModal: {
@@ -73,6 +78,8 @@ function DataContext({ children }: { children: React.ReactNode }) {
     dragAndDrop: {
       isDragging,
       setIsDragging,
+      showDisposeArea,
+      setShowDisposeArea,
     },
   }
 

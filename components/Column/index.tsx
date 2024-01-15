@@ -18,7 +18,7 @@ type Props = NonNullable<NonNullable<ProjectQuery['project']>['columns']>[0] & {
 function Column(props: Props) {
   const [createCard] = useMutation(CreateCardDocument)
 
-  const {dragAndDrop: {dragCardId, dragColumnId, isHoveringDisposeArea}} = useDataContext()
+  // const {dragAndDrop: {dragCardId, dragColumnId, isHoveringDisposeArea}} = useDataContext()
 
   return (
     <Draggable
@@ -37,10 +37,10 @@ function Column(props: Props) {
         >
           <Paper className={styles.column} elevation={3} sx={{
             m: 2,
-            borderWidth: '2px',
-            borderStyle: 'solid',
-            transition: '.3s',
-            borderColor: dragColumnId === props.uuid && dragCardId === '' && isHoveringDisposeArea  ? 'error.main' : 'transparent'
+            // borderWidth: '2px',
+            // borderStyle: 'solid',
+            // transition: '.3s',
+            // borderColor: dragColumnId === props.uuid && dragCardId === '' && isHoveringDisposeArea  ? 'error.main' : 'transparent'
           }}>
             <Chip
               className={styles.column__tasksCounter}

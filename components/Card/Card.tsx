@@ -18,7 +18,6 @@ type Props = {
 }
 
 export default function CardInner (props: Props) {
-    console.log(props.assignees)
     return (
         <div
             className={styles.card}

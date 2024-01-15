@@ -58,7 +58,7 @@ function Project(props: Props) {
   const [deleteCard] = useMutation(DeleteCardDocument)
 
   const {
-    dragAndDrop: { setIsDragging },
+    dragAndDrop: { setIsDragging, setShowDisposeArea },
   } = useDataContext()
 
   useEffect(() => {
@@ -293,11 +293,13 @@ function Project(props: Props) {
   }
 
   const handleDragStart = (result: any) => {
+    setShowDisposeArea(result.type === 'ColumnCards')
     setIsDragging(true)
   }
 
   const handleDragEnd = (result: any) => {
     setIsDragging(false)
+    setShowDisposeArea(false)
     if (!result.destination) {
       return
     }
