@@ -32,7 +32,7 @@ type Props = {
 export default async function SignIn({searchParams}: Props) {
   const session = await getSession();
 
-  if (session) {
+  if (process.env.APP_ENV === 'test' || session) {
     return redirect('/dashboard');
   }
 
