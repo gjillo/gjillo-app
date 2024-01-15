@@ -65,6 +65,7 @@ function Project(props: Props) {
     setCurrentColumns(props.columns)
   }, [props])
 
+  const [shouldScroll, setShouldScroll] = useState(false)
   useEffect(() => {
     if (subscriptionCreatedColumns === undefined) {
       return
@@ -72,8 +73,16 @@ function Project(props: Props) {
     setCurrentColumns(prevColumns =>
       prevColumns.concat([subscriptionCreatedColumns.column_created])
     )
-    scrollToLastColumn()
+
   }, [subscriptionCreatedColumns])
+
+  useEffect(() => {
+    console.log("columns changed, shouldScroll:", shouldScroll)
+    if (shouldScroll) {
+      scrollToLastColumn()
+      setShouldScroll(false);
+    }
+  }, [currentColumns])
 
   useEffect(() => {
     if (subscriptionDeletedColumns === undefined) {
@@ -363,6 +372,11 @@ function Project(props: Props) {
     deleteCard({ variables: { cardUuid: draggableId } })
   }
 
+  const handleCreateColumn = () => {
+    setShouldScroll(true);
+    createColumn({ variables: { project_uuid: props.uuid } })
+  }
+
   return (
     <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <Paper elevation={1} sx={{ m: 1, position: 'relative' }}>
@@ -407,9 +421,7 @@ function Project(props: Props) {
                 </Grid>
                 <Grid item>
                   <AddColumn
-                    onClick={() =>
-                      createColumn({ variables: { project_uuid: props.uuid } })
-                    }
+                    onClick={handleCreateColumn}
                   />
                 </Grid>
               </Grid>
