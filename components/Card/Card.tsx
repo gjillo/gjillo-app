@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import CalendarMonthIcon from "@node_modules/@mui/icons-material/CalendarMonth";
 import React from "react";
 import {ProjectQuery} from "@graphql/types";
-import {SxProps} from "@mui/material";
+import {Avatar, AvatarGroup, SxProps, Tooltip} from "@mui/material";
 
 type Card = NonNullable<
     NonNullable<ProjectQuery['project']>['columns']
@@ -12,10 +12,13 @@ type Card = NonNullable<
 type Props = {
     name: Card['name']
     deadline: Card['deadline'],
+    tags: Card['tags'],
+    assignees: Card['assignees'],
     sx?: SxProps,
 }
 
 export default function CardInner (props: Props) {
+    console.log(props.assignees)
     return (
         <div
             className={styles.card}
@@ -24,18 +27,22 @@ export default function CardInner (props: Props) {
                 <Typography variant="body1" className={styles.name}>
                     {!props.name || props.name === '' ? <i>No title</i> : props.name}
                 </Typography>
-                {/*{labels && (*/}
-                {/*  <ul className={styles.labels}>*/}
-                {/*    {labels.map(label => (*/}
-                {/*      <li key={label.name}><Chip className={styles.label} label={label.name} sx={{ backgroundColor: label.color }} size="small" /></li>*/}
-                {/*    ))}*/}
-                {/*</ul>*/}
-                {/*)}*/}
-                {/*{assignee && (*/}
-                {/*  <Tooltip title={assignee}>*/}
-                {/*    <Avatar className={styles.assignee} src="/to/be/changed.png" />*/}
-                {/*  </Tooltip>*/}
-                {/*)}*/}
+                {props.tags && (
+                  <ul className={styles.labels}>
+                    {props.tags.map(tag => (
+                      <li key={tag.value}><Chip className={styles.label} label={tag.value} sx={{ backgroundColor: tag.color }} size="small" /></li>
+                    ))}
+                </ul>
+                )}
+                {props.assignees && (
+                    <AvatarGroup max={3} className={styles.assignees}>
+                        {props.assignees.map(ass =>
+                            <Tooltip title={ass.name}>
+                                <Avatar src={ass.image} className={styles.avatar}/>
+                            </Tooltip>
+                        )}
+                    </AvatarGroup>
+                )}
 
                 {props.deadline && (
                     <Chip
