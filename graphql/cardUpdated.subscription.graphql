@@ -1,0 +1,21 @@
+subscription CardUpdated {
+  card_updated {
+    name
+    deadline
+    uuid
+    column {
+      uuid
+    }
+    order
+    tags {
+      color
+      uuid
+      value
+    }
+    assignees {
+      name
+      image
+      uuid
+    }
+  }
+}

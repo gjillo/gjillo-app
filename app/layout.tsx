@@ -5,6 +5,8 @@ import ThemeRegistry from "@app/ThemeRegistry";
 import React from "react";
 import { ApolloWrapper } from "@app/ApolloWrapper"
 import { DataContext } from './DataContext';
+import SignOutButton from "@app/dashboard/SignOutButton";
+import { useSession } from "next-auth/react"
 
 const inter = Inter({ subsets: ['latin'] })
 

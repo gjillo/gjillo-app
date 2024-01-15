@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import {List, ListItem, ListItemButton, ListItemText, Typography} from "@mui/material";
 import {getClient} from "@app/ApolloClientRSC";
 import {GetProjectsDocument} from "@graphql/types";
+import SignOutButton from "@app/dashboard/SignOutButton";
+import React from "react";
 
 export default async function Component() {
     const session = await getSession();
@@ -20,6 +22,9 @@ export default async function Component() {
 
     return (
         <Box data-cy={"dashboard"}>
+            {session &&
+                <SignOutButton/>
+            }
             <Typography variant="h1">Dashboard</Typography>
 
             <Box sx={{height: "3rem"}} />

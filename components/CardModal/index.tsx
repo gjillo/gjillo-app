@@ -4,13 +4,14 @@ import {
   Paper,
   Typography,
   Box,
+  IconButton ,
   CircularProgress,
   Snackbar,
   Alert,
   Backdrop,
 } from '@mui/material'
-
-import { useLazyQuery, useMutation } from "@apollo/client";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 
 import React, { useEffect, useState } from 'react'
 
@@ -32,11 +33,13 @@ import {
   UpdateCardAssigneesDocument,
   UpdateCardDeadlineDocument,
   UpdateCardMilestoneDocument,
-  ProjectUser
+  ProjectUser,
+  CardUpdatedDocument
 } from '@graphql/types';
 import { useDataContext } from "@app/DataContext";
 import Assignees from './Assignees';
 import Tags from './Tags';
+import Grid from "@mui/material/Grid";
 
 type Props = Pick<NonNullable<ProjectQuery["project"]>, "users" | "tags" | "milestones">
 
@@ -49,8 +52,9 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
   const [tags, setTags] = useState<Tag[]>([])
 
   const {cardModal: { open, setOpen, cardUuid }} = useDataContext()
+  const {milestoneModal: { setOpen: setMilestoneOpen, setMilestoneUuid }} = useDataContext()
 
-  const [getCardData, {data, loading: loadingCardData, error}] = useLazyQuery(CardDetailsDocument)
+  const [getCardData, {data, loading: loadingCardData, error, refetch}] = useLazyQuery(CardDetailsDocument)
 
   const [updateCardName, {loading: pendingCardNameUpdate}] = useMutation(UpdateCardNameDocument)
   const [updateCardDescription, {loading: pendingCardDescriptionUpdate}] = useMutation(UpdateCardDescriptionDocument)
@@ -58,6 +62,8 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
   const [updateCardTags, {loading: pendingCardTagsUpdate}] = useMutation(UpdateCardTagsDocument)
   const [updateCardDeadline, {loading: pendingCardDeadlineUpdate}] = useMutation(UpdateCardDeadlineDocument)
   const [updateCardMilestone, {loading: pendingCardMilestoneUpdate}] = useMutation(UpdateCardMilestoneDocument)
+
+  const {data: subscriptionCardUpdated} = useSubscription(CardUpdatedDocument)
 
   // When the cardUuid changes, fetch the card data
   useEffect(() => {
@@ -69,6 +75,12 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
       })
     }
   }, [cardUuid])
+
+  useEffect(() => {
+    if (subscriptionCardUpdated?.card_updated?.findIndex(card => card.uuid === cardUuid) !== -1) {
+      refetch()
+    }
+  }, [subscriptionCardUpdated])
 
   // When the card data changes, mirror the changes in the local state
   useEffect(() => {
@@ -150,6 +162,14 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
   const pendingDataUpdate = pendingCardNameUpdate || pendingCardDescriptionUpdate || pendingCardAssigneesUpdate || pendingCardTagsUpdate || pendingCardDeadlineUpdate || pendingCardMilestoneUpdate
 
+  const openMilestone = () => {
+    const milestoneUuid = milestones.find(m => m.name === milestone)?.uuid
+    if (milestoneUuid) {
+      setMilestoneUuid(milestoneUuid)
+    }
+    setMilestoneOpen(true)
+  }
+
   return (
       <Modal
         open={open}
@@ -172,7 +192,9 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
               position: 'relative',
             }}
           >
-            <CloseButton />
+            <CloseButton
+              setOpenFunction={useDataContext().cardModal.setOpen}
+            />
             <Box
               sx={{
                 width: '50%',
@@ -215,12 +237,32 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
 
               <Assignees assigneesList={users} selectedAssignees={assignees} handleAssigneesChange={handleAssigneesChange} />
 
-              <DropdownSingleField
-                label="Milestone"
-                options={milestones.map(milestone => milestone.name || '') || []}
-                onChange={value => handleMilestoneChange(value)}
-                value={milestone || null}
-              />
+              <Grid container spacing={2} sx={{mb: 3}}>
+                <Grid item xs={10}>
+                  <DropdownSingleField
+                      label="Milestone"
+                      options={milestones.map(milestone => milestone.name || '') || []}
+                      onChange={value => handleMilestoneChange(value)}
+                      value={milestone || null}
+                  />
+                </Grid>
+                <Grid item xs={'auto'} sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                  <IconButton
+                      onClick={openMilestone}
+                      disabled={!milestone}
+                  >
+                    <OpenInNewIcon
+                        sx={{
+                          color: '#757575'
+                        }}
+                    />
+                  </IconButton >
+                </Grid>
+              </Grid>
 
               <DateField label="Deadline" value={deadline} onChange={value => handleDeadlineChange(value?.toISOString() || null)} />
 
