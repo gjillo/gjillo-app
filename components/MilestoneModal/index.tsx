@@ -40,6 +40,8 @@ export default function MilestoneModal() {
   const [updateMilestoneDeadline, {loading: pendingMilestoneDeadlineUpdate}] = useMutation(UpdateMilestoneDeadlineDocument)
   const { data: subscriptionMilestoneUpdated } = useSubscription(MilestoneUpdatedDocument)
 
+  const { data: subscriptionCardUpdated } = useSubscription(CardUpdatedDocument)
+
 
   // When the milestoneUuid changes, fetch the card data
   useEffect(() => {
@@ -104,6 +106,27 @@ export default function MilestoneModal() {
 
     }
   }, [subscriptionMilestoneUpdated])
+
+  useEffect(() => {
+    if (subscriptionCardUpdated === undefined) {
+      return
+    }
+
+    const updatedCards = subscriptionCardUpdated.card_updated
+
+    if (!updatedCards) {
+      return
+    }
+
+    const cardsUuids = cards.map(card => card.uuid)
+
+    const shouldRefetch = cards.some(card => cardsUuids.includes(card.uuid))
+
+    if (shouldRefetch) {
+      refetch()
+    }
+    
+  }, [subscriptionCardUpdated])
 
   return (
       <Modal

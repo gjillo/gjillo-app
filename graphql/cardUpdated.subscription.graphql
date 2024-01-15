@@ -3,5 +3,19 @@ subscription CardUpdated {
     name
     deadline
     uuid
+    column {
+      uuid
+    }
+    order
+    tags {
+      color
+      uuid
+      value
+    }
+    assignees {
+      name
+      image
+      uuid
+    }
   }
 }

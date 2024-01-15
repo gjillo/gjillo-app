@@ -161,35 +161,106 @@ function Project(props: Props) {
       return
     }
 
-    const column = currentColumns.find(c =>
-      c.cards.some(card => card.uuid === subscriptionCardUpdated.card_updated.uuid)
-    )
+    const updatedCards = subscriptionCardUpdated.card_updated
 
-    if (column === undefined) {
+    if (!updatedCards) {
       return
     }
 
-    const newColumn = {
-      ...column,
-      cards: column.cards.map(card => {
-        if (card.uuid === subscriptionCardUpdated.card_updated.uuid) {
-          return {
-            ...card,
-            ...subscriptionCardUpdated.card_updated,
+
+    // Card data was changed
+    if (updatedCards.length === 1) {
+      const updatedCard = updatedCards[0]
+
+      const column = currentColumns.find(c =>
+        c.cards.some(card => card.uuid === updatedCard.uuid)
+      )
+
+      if (column === undefined) {
+        return
+      }
+
+      const newColumn = {
+        ...column,
+        cards: column.cards.map(card => {
+          if (card.uuid === updatedCard.uuid) {
+            return {
+              ...card,
+              ...updatedCard,
+            }
+          }
+          return card
+        }),
+      }
+
+      setCurrentColumns(prevColumns =>
+        prevColumns.map(c => {
+          if (c.uuid === newColumn.uuid) {
+            return newColumn
+          }
+          return c
+        })
+      )
+    } 
+    // Card was moved
+    else {
+      const workingColumns: any = {}
+      for (const updatedCard of updatedCards) {
+        if (updatedCard?.column?.uuid === undefined) {
+          continue
+        }
+        if (workingColumns[updatedCard?.column?.uuid] === undefined) {
+          workingColumns[updatedCard.column?.uuid] = [updatedCard]
+        } else {
+          workingColumns[updatedCard.column?.uuid].push(updatedCard)
+        }
+      }
+
+      const columnsUuids = updatedCards.map(card => card.column?.uuid).filter(uuid => uuid !== undefined)
+      const updatedCardsUuids = updatedCards.map(card => card.uuid)
+
+      const newColumns = Array.from(currentColumns).map(column => ({
+        ...column,
+        cards: column.cards.filter(card => !updatedCardsUuids.includes(card.uuid) || columnsUuids.includes(column.uuid) )
+      }))
+
+      for (const columnUuid in workingColumns) {
+        const columnIndex = currentColumns.findIndex(c => c.uuid === columnUuid)
+
+        if (columnIndex === -1) {
+          continue
+        }
+
+        const newCards = Array.from(currentColumns[columnIndex].cards)
+
+        for (const updatedCard of workingColumns[columnUuid]) {
+          const cardIndex = newCards.findIndex(c => c.uuid === updatedCard.uuid)
+
+          if (cardIndex === -1) {
+            newCards.push(updatedCard)
+          }
+
+          newCards[cardIndex] = {
+            ...newCards[cardIndex],
+            ...updatedCard,
           }
         }
-        return card
-      }),
-    }
 
-    setCurrentColumns(prevColumns =>
-      prevColumns.map(c => {
-        if (c.uuid === newColumn.uuid) {
-          return newColumn
+        newCards.sort((a, b) => a.order - b.order)
+
+        const newColumn = {
+          ...currentColumns[columnIndex],
+          cards: newCards,
         }
-        return c
-      })
-    )
+
+        console.log(newColumn)
+
+        newColumns[columnIndex] = newColumn
+      }
+
+      setCurrentColumns(newColumns)
+
+    }
   }, [subscriptionCardUpdated])
 
   const scrollToLastColumn = () => {

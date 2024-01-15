@@ -77,7 +77,7 @@ function CardModal({users, milestones, tags: tagsList}: Props) {
   }, [cardUuid])
 
   useEffect(() => {
-    if (subscriptionCardUpdated?.card_updated?.uuid === cardUuid) {
+    if (subscriptionCardUpdated?.card_updated?.findIndex(card => card.uuid === cardUuid) !== -1) {
       refetch()
     }
   }, [subscriptionCardUpdated])

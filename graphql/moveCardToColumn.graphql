@@ -1,5 +1,7 @@
 mutation MoveCardToColumn($cardUuid: UUID!, $columnUuid: UUID!) {
     cards {
-        move_to_column(card_uuid: $cardUuid, column_uuid: $columnUuid)
+        move_to_column(card_uuid: $cardUuid, column_uuid: $columnUuid)  {
+            uuid
+        }
     }
 }
