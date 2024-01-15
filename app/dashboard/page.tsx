@@ -28,7 +28,7 @@ export default async function Component() {
 
             <List>
                 {data.projects.map(p =>
-                    <ListItem key={p.uuid}>
+                    <ListItem key={p.uuid} data-cy={'project'}>
                         <ListItemButton href={`/project/${p.uuid}`}>
                             <ListItemText>
                                 {p.name}
