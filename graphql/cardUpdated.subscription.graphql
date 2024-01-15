@@ -7,5 +7,15 @@ subscription CardUpdated {
       uuid
     }
     order
+    tags {
+      color
+      uuid
+      value
+    }
+    assignees {
+      name
+      image
+      uuid
+    }
   }
 }
