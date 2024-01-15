@@ -18,7 +18,7 @@ function DisposeArea() {
           sx={{
             position: 'absolute',
             top: '10px',
-            right: '10px',
+            right: '80px',
             width: '150px',
             height: '50px',
             display: 'flex',
