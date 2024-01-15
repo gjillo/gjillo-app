@@ -3,5 +3,9 @@ subscription CardUpdated {
     name
     deadline
     uuid
+    column {
+      uuid
+    }
+    order
   }
 }
