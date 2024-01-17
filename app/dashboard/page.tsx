@@ -21,7 +21,11 @@ export default async function Component() {
     });
 
     return (
-        <Box data-cy={"dashboard"}>
+        <Box data-cy={"dashboard"}
+            sx={{
+                p: 2
+            }}
+        >
             {session &&
                 <SignOutButton/>
             }
