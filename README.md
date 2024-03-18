@@ -58,7 +58,7 @@ npm run dev
 
 App will be available at [localhost:3000](http://localhost:3000).
 
-## GraphQL types
+### GraphQL types
 
 To generate types for GraphQL after API schema changes, start API and run
 
@@ -71,6 +71,12 @@ or to watch changes live:
 ```
 npm run gql:watch
 ```
+
+## Screenshots
+
+
+<img src="media/1.png">
+<img src="media/23.png">
 
 ## Authors
 
